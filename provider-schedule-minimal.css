@@ -2036,10 +2036,6 @@ html body.provider-body[data-provider-theme][data-provider-layout]
     min-width:var(--date-card-width)!important;
   }
 
-  #dashboard[data-active-view="bookings"] {
-    --schedule-action-accent:#0d805c;
-    --schedule-action-contrast:rgb(255 255 255);
-  }
   #dashboard[data-active-view="bookings"] :is(
     #newBookingButton,
     .provider-mobile-create,
@@ -2047,9 +2043,83 @@ html body.provider-body[data-provider-theme][data-provider-layout]
   ),
   html body.provider-body[data-provider-theme][data-provider-layout]
     #dashboard[data-active-view="bookings"] .date-strip-frame>.date-strip>button.active {
-    border-color:var(--schedule-action-accent)!important;
-    background:var(--schedule-action-accent)!important;
+    border-color:var(--theme-accent)!important;
+    background:var(--theme-accent)!important;
     background-image:none!important;
-    color:var(--schedule-action-contrast)!important;
+    color:var(--theme-accent-contrast)!important;
+  }
+}
+
+/* v3: compact mobile journal header. Touch targets stay at least 44px while
+   the working timeline starts earlier and every theme keeps its own accent. */
+@media (max-width:760px) {
+  .provider-body .schedule-view-title {
+    min-height:70px!important;
+    margin:0 12px 8px!important;
+    padding-top:0!important;
+  }
+
+  .provider-body .date-navigation {
+    grid-template-rows:44px!important;
+    margin:56px var(--schedule-mobile-card-inset) 0!important;
+    padding:8px 10px 6px!important;
+  }
+
+  .provider-body :is(.date-today-button,.schedule-date-picker) {
+    min-height:44px!important;
+    height:44px!important;
+  }
+
+  .provider-body .schedule-date-picker input {
+    min-height:42px!important;
+  }
+
+  .provider-body .date-strip-frame {
+    height:68px!important;
+    margin-bottom:8px!important;
+  }
+
+  .provider-body .schedule-toolbar {
+    min-height:60px!important;
+    padding:10px 12px 7px!important;
+  }
+
+  .provider-body .schedule-toolbar>div:first-child strong {
+    font-size:18px!important;
+  }
+
+  .provider-body .schedule-workspace {
+    padding-top:8px!important;
+  }
+
+  html body.provider-body[data-provider-theme][data-provider-layout]
+    .date-strip-frame>.date-strip>button {
+    align-content:center!important;
+    justify-items:center!important;
+  }
+
+  html body.provider-body[data-provider-theme][data-provider-layout]
+    .date-strip-frame>.date-strip>button.active {
+    grid-template-rows:12px 28px 12px!important;
+    row-gap:0!important;
+    padding:3px 1px!important;
+  }
+
+  html body.provider-body[data-provider-theme][data-provider-layout]
+    .date-strip-frame>.date-strip>button>:is(span,strong,small) {
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0!important;
+    line-height:1!important;
+    transform:none!important;
+  }
+
+  html body.provider-body[data-provider-theme][data-provider-layout]
+    .date-strip-frame>.date-strip>button>strong {
+    font-variant-numeric:tabular-nums;
   }
 }

@@ -5932,7 +5932,7 @@ function settingsForClientLink(organization) {
   return normalizeClientPageSettings(readLocalClientPageSettings(organization?.id) || {});
 }
 function buildProviderClientUrl(organization = null) {
-  const url = new URL('https://aladushka9180-droid.github.io/anatomy-trainer/minuta-online-booking/');
+  const url = new URL('https://primetime-booking.github.io/');
   url.search = '';
   url.hash = '';
   if (organization?.public_booking_enabled && organization.public_slug) {
@@ -7094,9 +7094,10 @@ function updateBookingStats() {
   $('#todayBookingsCount').textContent = String(todayCount);
   $('#tomorrowBookingsCount').textContent = String(tomorrowCount);
   $('#newBookingsCount').textContent = String(upcomingCount);
-  $('#todayBookingsLabel').textContent = `${bookingCountWord(todayCount)} сегодня`;
-  $('#tomorrowBookingsLabel').textContent = `${bookingCountWord(tomorrowCount)} завтра`;
-  $('#upcomingBookingsLabel').textContent = `${bookingCountWord(upcomingCount)} впереди`;
+  $('#todayBookingsLabel').textContent = 'сегодня';
+  $('#tomorrowBookingsLabel').textContent = 'завтра';
+  $('#upcomingBookingsLabel').textContent = 'впереди';
+  $('.dashboard-summary')?.setAttribute('aria-label', `${todayCount} сегодня, ${tomorrowCount} завтра, Всего впереди — ${upcomingCount}`);
   const sidebarBadge = $('#newBookingsBadge');
   if (sidebarBadge) {
     sidebarBadge.textContent = String(upcomingCount);
@@ -15542,7 +15543,7 @@ function renderWaitlist() {
     return;
   }
   if (!active.length) {
-    const clientPageUrl = $('.provider-client-link')?.href || 'https://aladushka9180-droid.github.io/anatomy-trainer/minuta-online-booking/';
+    const clientPageUrl = $('.provider-client-link')?.href || 'https://primetime-booking.github.io/';
     holder.innerHTML = `<div class="provider-empty compact-empty waitlist-empty-state"><strong>Заявок пока нет</strong><small>Когда клиенту не подойдёт свободное время, его заявка появится здесь.</small><div class="provider-empty-actions"><a class="primary compact-button provider-client-link" href="${escapeHtml(clientPageUrl)}" target="_blank" rel="noopener noreferrer">Открыть страницу клиента</a></div></div>`;
     return;
   }
