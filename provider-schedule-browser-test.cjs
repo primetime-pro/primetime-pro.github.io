@@ -110,8 +110,8 @@ const server = http.createServer((request, response) => {
         assert.ok(result.previousGap >= 0, `${width}px: левая стрелка перекрывает первую дату (${result.previousGap}px)`);
         assert.ok(result.nextGap >= 0, `${width}px: правая стрелка перекрывает последнюю дату (${result.nextGap}px)`);
       } else {
-        assert.equal(result.stripOverflowX, 'auto', `${width}px: лента дат не получила нативную инерционную прокрутку`);
-        assert.match(result.stripTouchAction, /pan-x/, `${width}px: лента дат не принимает горизонтальный жест`);
+        assert.equal(result.stripOverflowX, 'hidden', `${width}px: выбранная дата может визуально уехать из фиксированного центра`);
+        assert.doesNotMatch(result.stripTouchAction, /pan-x/, `${width}px: нативная горизонтальная прокрутка конкурирует с фиксированной каруселью`);
         assert.match(result.stripTouchAction, /pan-y/, `${width}px: карусель дат блокирует вертикальный скролл`);
       }
       assert.equal(result.oldControlsHidden, true, `${width}px: старые стрелки остались видимы`);
@@ -194,16 +194,8 @@ const server = http.createServer((request, response) => {
         };
         const states=[];
         for (const step of [1, 1, 1, -1, -1]) states.push(await move(step));
-        return {
-          states,
-          swipeForward:dateStripSwipeStep(280, 120, 190, 124),
-          swipeBack:dateStripSwipeStep(120, 120, 210, 124),
-          verticalIgnored:dateStripSwipeStep(200, 100, 190, 190)
-        };
+        return { states };
       });
-      assert.equal(transitions.swipeForward, 1, `${width}px: свайп влево не выбирает следующий день`);
-      assert.equal(transitions.swipeBack, -1, `${width}px: свайп вправо не выбирает предыдущий день`);
-      assert.equal(transitions.verticalIgnored, 0, `${width}px: вертикальный жест ошибочно листает даты`);
       assert.ok(transitions.states.every(state => state.centerDelta <= 1.5), `${width}px: выбранная дата дёргается или не остаётся по центру (${JSON.stringify(transitions)})`);
       assert.ok(transitions.states.every(state => state.width >= 46 && state.width <= 56 && state.height >= 53 && state.height <= 55), `${width}px: размер выбранной даты меняется при последовательных переходах (${JSON.stringify(transitions)})`);
     }
@@ -387,54 +379,56 @@ const server = http.createServer((request, response) => {
 
     for (const width of [390, 760]) {
       await page.setViewportSize({ width, height:900 });
-      const inertialSelection = await page.evaluate(async () => {
+      const fixedCenterSelection = await page.evaluate(() => {
         selectedDate = '2026-12-29';
-        renderDateStrip({ forceCenter:true });
-        await new Promise(resolve => setTimeout(resolve, 520));
+        renderDateStrip({ forceCenter:true, instantCenter:true });
         const strip = document.querySelector('#dateStrip');
         const originalSelect = window.selectScheduleDate;
-        const selected = [];
         window.selectScheduleDate = value => {
-          selected.push(value);
           selectedDate = value;
-          renderDateStrip();
+          renderDateStrip({ instantCenter:true });
           renderSelectedDateTitle('day');
         };
-        const settleAt = async offset => {
-          const buttons = [...strip.querySelectorAll('[data-booking-date]')];
-          const activeIndex = buttons.findIndex(button => button.dataset.bookingDate === selectedDate);
-          const target = buttons[Math.max(0, Math.min(buttons.length - 1, activeIndex + offset))];
-          const stripRect = strip.getBoundingClientRect();
-          const targetRect = target.getBoundingClientRect();
-          strip.dataset.programmaticCenterUntil = '0';
-          strip.scrollLeft += (targetRect.left + targetRect.right - stripRect.left - stripRect.right) / 2;
-          strip.dispatchEvent(new Event('scroll'));
-          await new Promise(resolve => setTimeout(resolve, 240));
-          await new Promise(resolve => setTimeout(resolve, 520));
-          return { date:selectedDate, active:strip.querySelector('.active')?.dataset.bookingDate };
+        const centerDelta = () => {
+          const viewport = strip.getBoundingClientRect();
+          const active = strip.querySelector('[data-booking-date].active').getBoundingClientRect();
+          return Math.abs((active.left + active.right - viewport.left - viewport.right) / 2);
         };
-        const weak = await settleAt(2);
-        const medium = await settleAt(8);
-        const strong = await settleAt(18);
-        const beforeRepeat = selected.length;
-        strip.dataset.programmaticCenterUntil = '0';
-        strip.style.scrollBehavior = 'auto';
-        strip.scrollLeft -= 5 * 42;
-        strip.dispatchEvent(new Event('scroll'));
-        await new Promise(resolve => setTimeout(resolve, 60));
-        strip.scrollLeft -= 7 * 42;
-        strip.dispatchEvent(new Event('scroll'));
-        await new Promise(resolve => setTimeout(resolve, 760));
-        strip.style.removeProperty('scroll-behavior');
-        const repeatedCalls = selected.length - beforeRepeat;
+        const snapshot = () => ({
+          active:strip.querySelector('[data-booking-date].active')?.dataset.bookingDate,
+          picker:document.querySelector('#scheduleDatePicker').value,
+          centerDelta:centerDelta()
+        });
+        const swipe = (startX, moves, endX) => {
+          const start = new Event('touchstart', { bubbles:true, cancelable:true });
+          Object.defineProperty(start, 'touches', { value:[{ clientX:startX, clientY:20 }] });
+          strip.dispatchEvent(start);
+          const frames = [];
+          moves.forEach(clientX => {
+            const move = new Event('touchmove', { bubbles:true, cancelable:true });
+            Object.defineProperty(move, 'touches', { value:[{ clientX, clientY:21 }] });
+            strip.dispatchEvent(move);
+            frames.push({ ...snapshot(), prevented:move.defaultPrevented });
+          });
+          const end = new Event('touchend', { bubbles:true, cancelable:true });
+          Object.defineProperty(end, 'changedTouches', { value:[{ clientX:endX, clientY:22 }] });
+          strip.dispatchEvent(end);
+          return { frames, end:snapshot() };
+        };
+        const initial = snapshot();
+        const left = swipe(270, [220,170,120], 100);
+        const right = swipe(110, [160,210], 235);
+        const rapidLeft = swipe(270, [215,160], 130);
+        const result = { initial, left, right, rapidLeft };
         window.selectScheduleDate = originalSelect;
-        return { weak, medium, strong, repeatedCalls, selected };
+        return result;
       });
-      assert.equal(inertialSelection.weak.date, '2026-12-31', `${width}px: слабый жест не выбрал ближайшую дату`);
-      assert.ok(inertialSelection.medium.date > inertialSelection.weak.date, `${width}px: средний flick не пролистал дальше слабого`);
-      assert.ok(inertialSelection.strong.date > inertialSelection.medium.date, `${width}px: сильный flick не пролистал дальше недели`);
-      assert.equal(inertialSelection.strong.active, inertialSelection.strong.date, `${width}px: финальная дата не центрирована`);
-      assert.equal(inertialSelection.repeatedCalls, 1, `${width}px: повторный жест во время замедления вызвал несколько загрузок`);
+      const frames = [...fixedCenterSelection.left.frames, fixedCenterSelection.left.end, ...fixedCenterSelection.right.frames, fixedCenterSelection.right.end, ...fixedCenterSelection.rapidLeft.frames, fixedCenterSelection.rapidLeft.end];
+      assert.ok(frames.every(frame => frame.active === frame.picker), `${width}px: жест рассинхронизировал активную дату и поле: ${JSON.stringify(fixedCenterSelection)}`);
+      assert.ok(frames.every(frame => frame.centerDelta <= 1), `${width}px: выбранная дата ушла из фиксированного центра: ${JSON.stringify(fixedCenterSelection)}`);
+      assert.notEqual(fixedCenterSelection.left.end.active, fixedCenterSelection.initial.active, `${width}px: левый жест потерял все шаги`);
+      assert.notEqual(fixedCenterSelection.right.end.active, fixedCenterSelection.left.end.active, `${width}px: обратный жест не изменил дату`);
+      assert.notEqual(fixedCenterSelection.rapidLeft.end.active, fixedCenterSelection.right.end.active, `${width}px: быстрый повторный жест потерян`);
     }
 
     await page.emulateMedia({ reducedMotion:'reduce' });

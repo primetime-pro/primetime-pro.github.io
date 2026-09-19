@@ -82,7 +82,7 @@ try {
     document.querySelector('.booking-filters').hidden = true;
     const bookings = document.querySelector('#providerBookings');
     bookings.className = 'provider-bookings timeline-view';
-    bookings.innerHTML = '<div class="day-timeline" style="--timeline-height:720px;height:720px"><div class="timeline-hours"><span class="timeline-hour" style="top:0">10:00</span><span class="timeline-hour" data-last-hour style="top:700px">20:00</span></div><div class="timeline-stage"><i class="timeline-grid-line" style="top:0"></i><i class="timeline-grid-line" style="top:719px"></i><button class="timeline-booking status-confirmed" type="button" style="top:56px;height:72px">Запись</button><button class="timeline-booking status-block automatic-break" type="button" style="top:144px;height:52px">Перерыв</button></div></div>';
+    bookings.innerHTML = '<div class="day-timeline" style="--timeline-height:720px;height:720px"><div class="timeline-hours"><span class="timeline-hour" style="top:0">10:00</span><span class="timeline-hour" data-last-hour style="top:700px">20:00</span></div><div class="timeline-stage"><i class="timeline-grid-line" style="top:0"></i><i class="timeline-grid-line" style="top:719px"></i><button class="timeline-booking status-confirmed" data-mobile-timeline-top data-open-booking data-timeline-movable type="button" style="top:56px;height:72px"><span class="timeline-booking-copy"><strong><span class="timeline-service-title"><span class="timeline-service-core">Массаж спины + ШВЗ</span><span class="timeline-service-variant"> — углублённый</span></span><span class="timeline-service-duration">· 60 мин</span></strong><span class="timeline-booking-client-row"><small class="timeline-booking-client"><span class="timeline-mobile-time">11:00–12:00 · </span>Екатерина</small></span></span><span class="timeline-drag-handle"></span></button><button class="timeline-booking status-block automatic-break" type="button" style="top:144px;height:52px">Перерыв</button></div></div>';
     const activeDate = strip.querySelector('.active');
     const stripRect = strip.getBoundingClientRect();
     const activeRect = activeDate.getBoundingClientRect();
@@ -213,6 +213,10 @@ try {
       const mobileNav = document.querySelector('.provider-mobile-nav');
       const workspace = document.querySelector('.provider-workspace');
       const timelineBooking = timelineStage.querySelector('.timeline-booking');
+      const timelineServiceTitleElement = timelineBooking.querySelector('.timeline-service-title');
+      const timelineServiceTitle = timelineServiceTitleElement.getBoundingClientRect();
+      const timelineServiceDuration = timelineBooking.querySelector('.timeline-service-duration').getBoundingClientRect();
+      const timelineDragHandle = timelineBooking.querySelector('.timeline-drag-handle').getBoundingClientRect();
       timelineBooking.focus({ preventScroll:true });
       const timelineFocusWidth = parseFloat(getComputedStyle(timelineBooking).outlineWidth);
       const activeDateRhythm = () => {
@@ -298,9 +302,11 @@ try {
         firstHourVisible:firstHourRect.top >= timelineViewRect.top - .5 && firstHourRect.bottom <= timelineViewRect.bottom + .5,
         breakInside:breakRect.top >= timelineStageRect.top && breakRect.bottom <= timelineStageRect.bottom,
         lastHourInside:lastHourRect.top >= timelineViewRect.top && lastHourRect.bottom <= timelineViewRect.bottom + 1,
+        serviceTitleLineCount:timelineServiceTitle.height / parseFloat(getComputedStyle(timelineServiceTitleElement).lineHeight),
+        durationHandleGap:timelineDragHandle.left - timelineServiceDuration.right,
         focus:{ timeline:timelineFocusWidth },
         toolbarContentCenterDelta:Math.abs((toolbarCopy.top + toolbarCopy.bottom) / 2 - (journalToggle.top + journalToggle.bottom) / 2),
-        journalGridGap:rect('#providerBookings').top - journalToggle.bottom,
+        journalGridGap:rect('.day-timeline').top - journalToggle.bottom,
         quietTodayBackground:quietTodayStyle.backgroundColor,
         quietTodayBackgroundImage:quietTodayStyle.backgroundImage,
         quietTodayShadow:quietTodayStyle.boxShadow,
@@ -379,8 +385,9 @@ try {
       assert.ok(result.twoDigitRhythm.numberCenterDelta <= 1 && result.twoDigitRhythm.gapDelta <= 2, `${width}px two-digit selected date lost its vertical rhythm: ${JSON.stringify(result)}`);
       assert.ok(result.singleDigitRhythm.numberCenterDelta <= 1 && result.singleDigitRhythm.gapDelta <= 2, `${width}px single-digit selected date lost its vertical rhythm: ${JSON.stringify(result)}`);
       assert.ok(result.activeDateMarkerContent === 'none' || result.activeDateMarkerDisplay === 'none', `${width}px selected date regained a second lower marker: ${JSON.stringify(result)}`);
-      assert.ok(result.scheduleTop >= 390 && result.scheduleTop <= 520, `${width}px schedule begins: ${JSON.stringify(result)}`);
+      assert.ok(result.scheduleTop >= 340 && result.scheduleTop <= 480, `${width}px schedule begins too low for the mobile fold: ${JSON.stringify(result)}`);
       assert.ok(result.toolbarContentCenterDelta <= 2, `${width}px day heading and journal toggle are not aligned: ${JSON.stringify(result)}`);
+      if (width >= 390) assert.ok(result.serviceTitleLineCount <= 1.1 && result.durationHandleGap >= 0, `${width}px long service title wraps before the real handle boundary: ${JSON.stringify(result)}`);
       assert.ok(result.journalGridGap >= 8, `${width}px timeline grid touches the journal toggle: ${JSON.stringify(result)}`);
       assert.ok(result.strip.top - result.navigation.bottom >= -1 && result.strip.top - result.navigation.bottom <= 1, `${width}px date controls and strip no longer form one card: ${JSON.stringify(result)}`);
       assert.ok(result.toolbar.top - result.strip.bottom >= 5 && result.toolbar.top - result.strip.bottom <= 8, `${width}px date card and journal card lost their compact separation: ${JSON.stringify(result)}`);
@@ -447,24 +454,25 @@ try {
     const buttonRect = button.getBoundingClientRect();
     const labelRect = label.getBoundingClientRect();
     const viewport = strip.getBoundingClientRect();
-    const accentProbe = document.createElement('span');
-    accentProbe.style.background = 'var(--theme-accent)';
-    document.body.append(accentProbe);
-    const themeAccent = getComputedStyle(accentProbe).backgroundColor;
-    accentProbe.remove();
+    const selectedRect = selected.getBoundingClientRect();
+    const probe = document.createElement('i');
+    probe.style.color = 'var(--schedule-active-color)';
+    document.body.append(probe);
+    const expectedScheduleAccent = getComputedStyle(probe).color;
+    probe.remove();
     return {
-      fullyVisible:buttonRect.left >= viewport.left - 1 && buttonRect.right <= viewport.right + 1,
+      selectedCenterDelta:Math.abs((selectedRect.left + selectedRect.right - viewport.left - viewport.right) / 2),
       labelInside:labelRect.left >= buttonRect.left - 1 && labelRect.right <= buttonRect.right + 1 && labelRect.bottom <= buttonRect.bottom + 1,
       label:label.textContent.trim(),
       selectedBackground:getComputedStyle(selected).backgroundColor,
       selectedBackgroundImage:getComputedStyle(selected).backgroundImage,
-      themeAccent
+      expectedScheduleAccent
     };
   });
-  assert.equal(rightEdgeDate.fullyVisible, true, `390px date 22 is cropped: ${JSON.stringify(rightEdgeDate)}`);
+  assert.ok(rightEdgeDate.selectedCenterDelta <= 1, `390px selected date left the fixed center: ${JSON.stringify(rightEdgeDate)}`);
   assert.equal(rightEdgeDate.labelInside, true, `390px date 22 month label is clipped: ${JSON.stringify(rightEdgeDate)}`);
   assert.equal(rightEdgeDate.label, 'сент', 'date 22 month label changed');
-  assert.equal(rightEdgeDate.selectedBackground, rightEdgeDate.themeAccent, `390px selected date 19 lost the current theme accent: ${JSON.stringify(rightEdgeDate)}`);
+  assert.equal(rightEdgeDate.selectedBackground, rightEdgeDate.expectedScheduleAccent, `390px selected date 19 lost the current theme accent: ${JSON.stringify(rightEdgeDate)}`);
   assert.equal(rightEdgeDate.selectedBackgroundImage, 'none', `390px selected date 19 gained a gradient: ${JSON.stringify(rightEdgeDate)}`);
 
   await page.setViewportSize({ width:360, height:720 });

@@ -6598,7 +6598,7 @@ function setProviderView(view, { historyMode = 'push', focusHeading = true } = {
   }
   update();
 }
-function setFilter(filter) {
+function setFilter(filter, { render = true } = {}) {
   currentFilter = filter;
   if (filter !== 'day') calendarView = 'day';
   try {
@@ -6614,7 +6614,7 @@ function setFilter(filter) {
   updateJournalModeButtons();
   updateBookingQueryTools();
   syncScheduleContextHistory();
-  renderBookings();
+  if (render) renderBookings();
 }
 
 function setJournalMode(mode) {
@@ -6812,8 +6812,12 @@ function selectScheduleDate(value) {
   const nextDate = localIsoDate(date);
   selectedDate = nextDate;
   rememberSelectedDate();
-  renderDateStrip();
-  setFilter('day');
+  renderDateStrip({ instantCenter:true });
+  setFilter('day', { render:false });
+  renderSelectedDateTitle(calendarView);
+  requestAnimationFrame(() => {
+    if (selectedDate === nextDate) renderBookings();
+  });
   const userId = currentUser?.id;
   const generation = sessionGeneration;
   if (userId) void loadAutomaticBookingBreaks(nextDate, userId, generation).then(result => {
@@ -6860,14 +6864,6 @@ function updateDateStripEmphasis(dateStrip) {
   });
 }
 
-function dateStripSwipeStep(startX, startY, endX, endY, threshold = 36) {
-  const deltaX = Number(endX) - Number(startX);
-  const deltaY = Number(endY) - Number(startY);
-  if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY)) return 0;
-  if (Math.abs(deltaX) < threshold || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return 0;
-  return deltaX < 0 ? 1 : -1;
-}
-
 function centerDateStripSelection(dateStrip, options = {}) {
   if (!dateStrip || dateStrip.scrollWidth <= dateStrip.clientWidth) return;
   const active = dateStrip.querySelector('[data-booking-date].active');
@@ -6877,8 +6873,9 @@ function centerDateStripSelection(dateStrip, options = {}) {
   const activeContentLeft = activeRect.left - stripRect.left + dateStrip.scrollLeft;
   const target = activeContentLeft - (dateStrip.clientWidth - activeRect.width) / 2;
   const nextLeft = Math.max(0, Math.min(dateStrip.scrollWidth - dateStrip.clientWidth, target));
-  const smooth = options.smooth === true && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  dateStrip.dataset.programmaticCenterUntil = String(Date.now() + (smooth ? 460 : 100));
+  const instant = options.instant === true;
+  const smooth = !instant && options.smooth === true && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  dateStrip.dataset.programmaticCenterUntil = String(Date.now() + (instant ? 520 : smooth ? 460 : 100));
   if (smooth && typeof dateStrip.scrollTo === 'function') dateStrip.scrollTo({ left:nextLeft, behavior:'smooth' });
   else {
     const inlineScrollBehavior = dateStrip.style.scrollBehavior;
@@ -6886,21 +6883,6 @@ function centerDateStripSelection(dateStrip, options = {}) {
     dateStrip.scrollLeft = nextLeft;
     dateStrip.style.scrollBehavior = inlineScrollBehavior;
   }
-}
-
-function animateMobileDateStripRecentering(dateStrip, previousDateIso, nextDateIso) {
-  if (!dateStrip || !previousDateIso || previousDateIso === nextDateIso) return;
-  if (!window.matchMedia('(max-width: 760px)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const previous = parseLocalIsoDate(previousDateIso);
-  const next = parseLocalIsoDate(nextDateIso);
-  if (!previous || !next || typeof dateStrip.animate !== 'function') return;
-  const direction = next > previous ? 1 : -1;
-  const activeWidth = dateStrip.querySelector('[data-booking-date].active')?.getBoundingClientRect().width || 52;
-  dateStrip.getAnimations?.().forEach(animation => animation.cancel());
-  dateStrip.animate([
-    { transform:`translateX(${direction * Math.min(64, activeWidth + 6)}px)`, opacity:.84 },
-    { transform:'translateX(0)', opacity:1 }
-  ], { duration:190, easing:'cubic-bezier(.22,.75,.25,1)' });
 }
 
 function bindDateStripResizeCentering(dateStrip) {
@@ -6918,7 +6900,7 @@ function bindDateStripResizeCentering(dateStrip) {
   dateStrip.dataset.resizeObserverBound = 'true';
 }
 
-function renderDateStrip({ forceCenter = false } = {}) {
+function renderDateStrip({ forceCenter = false, instantCenter = false } = {}) {
   const dateStrip = $('#dateStrip');
   if (!dateStrip) return;
   const todayIso = businessTodayIso();
@@ -6972,7 +6954,6 @@ function renderDateStrip({ forceCenter = false } = {}) {
   });
   updateDateStripEmphasis(dateStrip);
   dateStrip.dataset.selectedDate = selectedDate;
-  if (mobileCenteredRange && rebuildStrip) animateMobileDateStripRecentering(dateStrip, previousSelectedDate, selectedDate);
   const picker = $('#scheduleDatePicker');
   if (picker) picker.value = selectedDate;
   const todayButton = $('[data-date-today]');
@@ -6983,9 +6964,15 @@ function renderDateStrip({ forceCenter = false } = {}) {
     todayButton.setAttribute('aria-pressed', String(current));
   }
   if (rebuildStrip || selectionChanged || forceCenter) {
-    const smoothSelection = selectionChanged && !rebuildStrip && Boolean(previousSelectedDate);
-    requestAnimationFrame(() => centerDateStripSelection(dateStrip, { smooth:smoothSelection }));
-    window.setTimeout(() => centerDateStripSelection(dateStrip, { smooth:smoothSelection }), 220);
+    const fixedMobileCenter = mobileCenteredRange;
+    const immediateCenter = instantCenter || fixedMobileCenter;
+    const smoothSelection = !immediateCenter && selectionChanged && !rebuildStrip && Boolean(previousSelectedDate);
+    const center = () => centerDateStripSelection(dateStrip, { smooth:smoothSelection, instant:immediateCenter });
+    if (immediateCenter) {
+      center();
+      if (fixedMobileCenter) requestAnimationFrame(center);
+    } else requestAnimationFrame(center);
+    if (!immediateCenter) window.setTimeout(center, 220);
   }
   bindDateStripResizeCentering(dateStrip);
   if (!dateStrip.dataset.scrollInteractionsBound) {
@@ -6998,26 +6985,31 @@ function renderDateStrip({ forceCenter = false } = {}) {
     let suppressClick = false;
     let touchStartX = null;
     let touchStartY = null;
-    let mobileSettleTimer = 0;
-    const settleMobileDate = () => {
-      mobileSettleTimer = 0;
-      if (!window.matchMedia('(max-width: 760px)').matches) return;
-      if (Number(dateStrip.dataset.programmaticCenterUntil || 0) > Date.now()) return;
-      const stripRect = dateStrip.getBoundingClientRect();
-      const center = (stripRect.left + stripRect.right) / 2;
-      const nearest = [...dateStrip.querySelectorAll('[data-booking-date]')].reduce((best, button) => {
-        const rect = button.getBoundingClientRect();
-        const distance = Math.abs((rect.left + rect.right) / 2 - center);
-        return !best || distance < best.distance ? { button, distance } : best;
-      }, null)?.button;
-      const nextDate = nearest?.dataset.bookingDate;
-      if (!nextDate) return;
-      if (nextDate !== selectedDate) selectScheduleDate(nextDate);
-      else centerDateStripSelection(dateStrip, { smooth:true });
+    let touchAnchorX = null;
+    let touchIntent = '';
+    let touchMoved = false;
+    const mobileDateStep = () => {
+      const buttons = [...dateStrip.querySelectorAll('[data-booking-date]')];
+      const activeIndex = buttons.findIndex(button => button.classList.contains('active'));
+      const active = buttons[activeIndex];
+      const neighbor = buttons[activeIndex + 1] || buttons[activeIndex - 1];
+      if (!active || !neighbor) return 36;
+      const activeRect = active.getBoundingClientRect();
+      const neighborRect = neighbor.getBoundingClientRect();
+      const centerDistance = Math.abs((neighborRect.left + neighborRect.right - activeRect.left - activeRect.right) / 2);
+      return Math.max(30, Math.min(52, centerDistance * .72));
     };
-    const scheduleMobileSettle = (delay = 150) => {
-      if (mobileSettleTimer) clearTimeout(mobileSettleTimer);
-      mobileSettleTimer = window.setTimeout(settleMobileDate, delay);
+    const advanceMobileDateGesture = clientX => {
+      if (!Number.isFinite(clientX) || touchAnchorX === null) return 0;
+      const delta = clientX - touchAnchorX;
+      const step = mobileDateStep();
+      const count = Math.trunc(Math.abs(delta) / step);
+      if (!count) return 0;
+      const direction = delta < 0 ? 1 : -1;
+      touchAnchorX += (delta < 0 ? -1 : 1) * count * step;
+      shiftScheduleDate(direction * count);
+      touchMoved = true;
+      return count;
     };
     const clampScroll = value => Math.max(0, Math.min(dateStrip.scrollWidth - dateStrip.clientWidth, value));
     const stopWheelAnimation = () => {
@@ -7062,6 +7054,16 @@ function renderDateStrip({ forceCenter = false } = {}) {
       if (event.pointerId !== dragPointerId) return;
       const delta = event.clientX - dragStartX;
       if (!hasDragged && Math.abs(delta) < 4) return;
+      if (window.matchMedia('(max-width: 760px)').matches) {
+        const step = mobileDateStep();
+        const count = Math.trunc(Math.abs(delta) / step);
+        if (!count) return;
+        hasDragged = true;
+        dragStartX += (delta < 0 ? -1 : 1) * count * step;
+        event.preventDefault();
+        shiftScheduleDate(delta < 0 ? count : -count);
+        return;
+      }
       if (!hasDragged) {
         hasDragged = true;
         dateStrip.setPointerCapture?.(event.pointerId);
@@ -7078,31 +7080,54 @@ function renderDateStrip({ forceCenter = false } = {}) {
       dragPointerId = null;
       dateStrip.classList.remove('is-dragging');
       if (dateStrip.hasPointerCapture?.(event.pointerId)) dateStrip.releasePointerCapture(event.pointerId);
+      if (suppressClick && window.matchMedia('(max-width: 760px)').matches) centerDateStripSelection(dateStrip, { instant:true });
     };
     dateStrip.addEventListener('pointerup', finishDrag);
     dateStrip.addEventListener('pointercancel', finishDrag);
     dateStrip.addEventListener('touchstart', event => {
       if (event.touches.length !== 1) return;
-      if (mobileSettleTimer) clearTimeout(mobileSettleTimer);
-      mobileSettleTimer = 0;
       dateStrip.dataset.programmaticCenterUntil = '0';
       touchStartX = event.touches[0].clientX;
       touchStartY = event.touches[0].clientY;
+      touchAnchorX = touchStartX;
+      touchIntent = '';
+      touchMoved = false;
     }, { passive:true });
+    dateStrip.addEventListener('touchmove', event => {
+      if (touchStartX === null || event.touches.length !== 1 || !window.matchMedia('(max-width: 760px)').matches) return;
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (!touchIntent && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= 6) {
+        touchIntent = Math.abs(deltaX) > Math.abs(deltaY) * 1.15 ? 'horizontal' : 'vertical';
+      }
+      if (touchIntent !== 'horizontal') return;
+      event.preventDefault();
+      advanceMobileDateGesture(touch.clientX);
+    }, { passive:false });
     dateStrip.addEventListener('touchend', event => {
       const touch = event.changedTouches[0];
-      const step = touch && touchStartX !== null
-        ? dateStripSwipeStep(touchStartX, touchStartY, touch.clientX, touch.clientY)
-        : 0;
+      if (touchIntent === 'horizontal' && touch && !touchMoved && touchAnchorX !== null && Math.abs(touch.clientX - touchAnchorX) >= 22) {
+        shiftScheduleDate(touch.clientX < touchAnchorX ? 1 : -1);
+        touchMoved = true;
+      }
+      const handled = touchIntent === 'horizontal' && touchMoved;
       touchStartX = null;
       touchStartY = null;
-      if (!step) return;
+      touchAnchorX = null;
+      touchIntent = '';
+      touchMoved = false;
+      if (!handled) return;
       suppressClick = true;
-      scheduleMobileSettle(170);
+      event.preventDefault();
+      centerDateStripSelection(dateStrip, { instant:true });
     }, { passive:false });
     dateStrip.addEventListener('touchcancel', () => {
       touchStartX = null;
       touchStartY = null;
+      touchAnchorX = null;
+      touchIntent = '';
+      touchMoved = false;
     }, { passive:true });
     dateStrip.addEventListener('click', event => {
       if (!suppressClick) return;
@@ -7112,8 +7137,6 @@ function renderDateStrip({ forceCenter = false } = {}) {
     }, true);
     dateStrip.addEventListener('scroll', () => {
       if (!wheelFrame && dragPointerId === null) wheelTarget = dateStrip.scrollLeft;
-      if (window.matchMedia('(max-width: 760px)').matches
-        && Number(dateStrip.dataset.programmaticCenterUntil || 0) <= Date.now()) scheduleMobileSettle();
     }, { passive:true });
     dateStrip.dataset.scrollInteractionsBound = 'true';
   }
@@ -8421,7 +8444,7 @@ function renderTimeline(sourceItems) {
     const automaticBreakSourceMarkup = item.automatic_break
       ? '<span class="timeline-automatic-break-source">Автоматический · из правил записи</span>'
       : '';
-    const serviceTitleMarkup = block ? `${serviceMarkup}${automaticBreakSourceMarkup}` : `${serviceMarkup} <span class="timeline-service-duration">· ${duration} мин</span>`;
+    const serviceTitleMarkup = block ? `${serviceMarkup}${automaticBreakSourceMarkup}` : `<span class="timeline-service-title">${serviceMarkup}</span><span class="timeline-service-duration">· ${duration} мин</span>`;
     const renderedNote = mobileTimeline ? '' : bookingNotePresenceMarkup(note, 'timeline-booking-note-presence');
     const renderedStatus = mobileTimeline ? '' : timelineStatus;
     const mobileBadgeMarkup = mobileTimeline ? badgeMarkup : '';
@@ -8441,8 +8464,9 @@ function renderTimeline(sourceItems) {
       : `<button class="${className}" type="button" data-open-booking="${item.id}" ${imported ? 'data-imported-history' : ''} ${movable ? 'data-timeline-movable aria-describedby="timelineMoveInstruction" aria-keyshortcuts="Shift+ArrowUp Shift+ArrowDown"' : ''} data-booking-duration="${duration}" data-mobile-timeline-top="${top + 2}" style="${timelineStyle}" aria-label="${ariaLabel}" title="${imported ? 'Импортированная запись · только просмотр' : moveRestriction || 'Перетащите или нажмите Shift и стрелку, чтобы изменить время'}">${cardContent}${dragHandle}</button>`;
   }).join('');
   const nowMarker = scheduleNowMarkerMarkup(selectedDate, start, end, hourHeight, 'timeline-now-marker');
+  const emptyHintTop = Math.max(30, Math.min(120, Math.max(60, 720 - start), (end - start) / 2)) / 60 * hourHeight;
   holder.className = 'provider-bookings timeline-view';
-  holder.innerHTML = `<div class="day-timeline" style="--timeline-height:${totalHeight}px;--half-hour-offset:${hourHeight / 2}px"><div class="timeline-hours">${labels.join('')}</div><div class="timeline-stage" data-create-booking-at data-timeline-date="${selectedDate}" data-timeline-start="${start}" data-timeline-end="${end}" data-timeline-natural-height="${naturalTimelineHeight}" data-timeline-keyboard-minute="${start}" role="group" tabindex="0" aria-label="Выбор свободного времени. Выбрано ${timeFromMinutes(start)}. Стрелками измените время, Enter создаст запись">${lines.join('')}${nowMarker}${scheduleCreateHintMarkup()}${cards || `<div class="timeline-empty-state"><span>${uiIcon('plus')}</span><strong>День свободен</strong><small>Нажмите на нужное время, чтобы записать клиента или поставить перерыв</small></div>`}</div></div>`;
+  holder.innerHTML = `<div class="day-timeline" style="--timeline-height:${totalHeight}px;--half-hour-offset:${hourHeight / 2}px;--timeline-empty-hint-top:${emptyHintTop}px"><div class="timeline-hours">${labels.join('')}</div><div class="timeline-stage" data-create-booking-at data-timeline-date="${selectedDate}" data-timeline-start="${start}" data-timeline-end="${end}" data-timeline-natural-height="${naturalTimelineHeight}" data-timeline-keyboard-minute="${start}" role="group" tabindex="0" aria-label="Выбор свободного времени. Выбрано ${timeFromMinutes(start)}. Стрелками измените время, Enter создаст запись">${lines.join('')}${nowMarker}${scheduleCreateHintMarkup()}${cards || `<div class="timeline-empty-state"><span>${uiIcon('plus')}</span><strong>День свободен</strong><small>Нажмите на нужное время, чтобы записать клиента или поставить перерыв</small></div>`}</div></div>`;
   if (typeof updateScheduleNowMarkers === 'function') updateScheduleNowMarkers();
 }
 
