@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f7">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="description" content="Инструкция PrimeTime Pro.">
+  <title>Инструкция — PrimeTime Pro</title>
+  <link rel="icon" href="../provider-icon.svg?v=811" type="image/svg+xml">
+  <link rel="stylesheet" href="help.css?v=811">
+</head>
+<body class="article-page">
+  <a class="skip-link" href="#helpArticle">Перейти к статье</a>
+  <header class="help-header">
+    <a class="help-brand" href="index.html" aria-label="Помощь PrimeTime Pro — на главную">
+      <span class="help-brand-mark">PT</span>
+      <span><strong>PrimeTime Pro</strong><small>Помощь</small></span>
+    </a>
+    <nav class="help-header-nav" aria-label="Основная навигация">
+      <a href="index.html#sections">Все разделы</a>
+      <a class="help-product-link" id="productLink" href="../provider.html"><span>Открыть PrimeTime Pro</span><svg aria-hidden="true"><use href="../ui-icons.svg#icon-arrow-right"></use></svg></a>
+    </nav>
+  </header>
+
+  <main class="article-shell" id="articleRoot">
+    <aside class="article-sidebar" aria-label="Статьи раздела">
+      <a class="back-link" id="articleBackLink" href="index.html"><svg aria-hidden="true"><use href="../ui-icons.svg#icon-arrow-left"></use></svg>К базе знаний</a>
+      <p>В этом разделе</p>
+      <nav id="articleSectionNav"></nav>
+    </aside>
+
+    <article class="help-article" id="helpArticle">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="index.html">Помощь</a><span>/</span><a id="articleCategory" href="index.html#sections">Инструкция</a></nav>
+      <header class="article-heading">
+        <p id="articleMeta"></p>
+        <h1 id="articleTitle">Загружаем инструкцию…</h1>
+        <p class="article-intro" id="articleIntro"></p>
+      </header>
+      <div id="articleVisual"></div>
+      <div class="article-steps" id="articleSteps"></div>
+      <aside class="article-note" id="articleNote"><svg aria-hidden="true"><use href="../ui-icons.svg#icon-info"></use></svg><div><strong>Важно</strong><p></p></div></aside>
+      <section class="related-articles" aria-labelledby="relatedTitle">
+        <p>Продолжить</p><h2 id="relatedTitle">Похожие инструкции</h2><div id="relatedList"></div>
+      </section>
+    </article>
+    <noscript><p class="article-script-note">Для просмотра пошаговой инструкции включите JavaScript.</p></noscript>
+  </main>
+
+  <dialog class="article-visual-dialog" id="articleVisualDialog" aria-labelledby="visualDialogTitle">
+    <div class="article-visual-dialog-head"><strong id="visualDialogTitle">Схема к инструкции</strong><button type="button" id="closeVisualDialog" aria-label="Закрыть увеличенное изображение"><svg aria-hidden="true"><use href="../ui-icons.svg#icon-close"></use></svg></button></div>
+    <img id="articleVisualFull" alt="">
+  </dialog>
+
+  <footer class="help-footer">
+    <span>© PrimeTime Pro</span>
+    <div><a href="../privacy.html">Конфиденциальность</a><a id="footerProductLink" href="../provider.html">Вернуться в кабинет</a></div>
+  </footer>
+  <script src="help-data.js?v=811"></script>
+  <script src="article.js?v=811" defer></script>
+  <script src="../site-update.js?v=817" defer></script>
+</body>
+</html>

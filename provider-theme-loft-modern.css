@@ -1,0 +1,303 @@
+/* Modern Mineral: единая тёмная система для темы «Лофт / Индастриал». */
+.provider-body[data-provider-theme="loft"] {
+  --theme-bg:#151817;
+  --theme-surface:#1d211f;
+  --theme-surface-alt:#232825;
+  --theme-ink:#f3f1ec;
+  --theme-muted:#abb2ac;
+  --theme-line:rgba(255,255,255,.09);
+  --theme-accent:#c48765;
+  --theme-accent-soft:rgba(196,135,101,.15);
+  --theme-accent-contrast:#1f1510;
+  --theme-shadow:rgba(0,0,0,.24);
+  --material-card-bg:#1d211f;
+  --material-card-border:rgba(255,255,255,.09);
+  --material-radius:16px;
+  --material-control-radius:12px;
+  --atmosphere-background:radial-gradient(circle at 82% 6%,rgba(196,135,101,.09),transparent 32%),radial-gradient(circle at 8% 86%,rgba(112,129,120,.08),transparent 36%),linear-gradient(145deg,#131615,#1a1e1c 54%,#151817);
+  --atmosphere-panel:#1d211f;
+  --atmosphere-panel-strong:#202522;
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  color-scheme:dark;
+  background:var(--atmosphere-background)!important;
+}
+
+.theme-loft {
+  --theme-preview-bg:#151817;
+  --theme-preview-surface:#232825;
+  --theme-preview-line:#39403c;
+  --theme-preview-accent:#c48765;
+  color:#f3f1ec;
+}
+
+.theme-loft .theme-swatch {
+  background-image:radial-gradient(circle at 82% 8%,rgba(196,135,101,.12),transparent 42%),linear-gradient(145deg,#151817,#242925)!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(*,button,input,select,textarea) {
+  text-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.provider-app,.provider-view) {
+  background:transparent!important;
+  background-image:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-app {
+  color:var(--theme-ink)!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-sidebar {
+  border:1px solid var(--theme-line)!important;
+  background:#1a1e1c!important;
+  background-image:none!important;
+  box-shadow:8px 0 30px rgba(0,0,0,.16)!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.provider-brand,.sidebar-bottom) {
+  border-color:var(--theme-line)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-brand .brand-mark {
+  border:1px solid rgba(196,135,101,.42)!important;
+  border-radius:13px!important;
+  background:#c48765!important;
+  background-image:none!important;
+  color:#1f1510!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.brand strong,.provider-topbar h1,.view-title h2,.settings-heading h3,.panel-head h3,.notification-toolbar h3,.client-profile-head h3,.organization-overview-copy h3) {
+  color:var(--theme-ink)!important;
+  font-family:inherit!important;
+  font-weight:750!important;
+  letter-spacing:-.02em!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.brand small,.provider-topbar small,.view-title>div:first-child>span:not(.panel-count),.provider-nav-label) {
+  color:var(--theme-muted)!important;
+  font-family:inherit!important;
+  letter-spacing:.08em!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-nav {
+  gap:4px!important;
+  border:0!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-nav button {
+  min-height:48px!important;
+  border:1px solid transparent!important;
+  border-radius:12px!important;
+  background:transparent!important;
+  background-image:none!important;
+  color:var(--theme-muted)!important;
+  box-shadow:none!important;
+  font-family:inherit!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-nav button:hover {
+  border-color:var(--theme-line)!important;
+  background:#222724!important;
+  color:var(--theme-ink)!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-nav button.active {
+  border-color:rgba(196,135,101,.24)!important;
+  border-left:3px solid var(--theme-accent)!important;
+  background:#272c29!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-nav button.active>span:first-child {
+  background:transparent!important;
+  color:var(--theme-accent)!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.provider-nav b,.panel-count,.dashboard-summary) {
+  border:1px solid rgba(196,135,101,.25)!important;
+  background:var(--theme-accent-soft)!important;
+  color:var(--theme-accent)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-topbar {
+  border:1px solid var(--theme-line)!important;
+  background:rgba(29,33,31,.9)!important;
+  background-image:none!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.12)!important;
+  backdrop-filter:blur(18px);
+}
+
+.provider-body[data-provider-theme="loft"] :is(
+  .panel,.schedule-card,.clients-directory,.client-profile,.settings-card,.notification-card,.waitlist-provider-card,
+  .report-summary article,.report-comparison,.report-business-card,.report-performers,.report-visual-grid>.panel,
+  .portfolio-card,.provider-review-card,.service-editor,.team-calendar-toolbar,.report-command-center,
+  .calendar-overview-day,.calendar-overview-booking,.team-calendar-columns .team-calendar-group
+) {
+  border:1px solid var(--theme-line)!important;
+  border-radius:var(--material-radius)!important;
+  background:var(--theme-surface)!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.13)!important;
+  backdrop-filter:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(
+  .date-navigation,.date-strip,.schedule-toolbar,.timeline-view,.schedule-empty,.provider-user,.service-form,
+  .booking-sheet-client,.booking-sheet-note-editor,.client-labels-panel,.provider-display-hint,.organization-row,
+  .organization-create,.organization-checks label,.client-summary article,.report-secondary,.report-decision-section,
+  .report-data-source,.report-custom-period,.retention-settings-form,.retention-number-field,.calendar-view-toggle,
+  .install-guide,.settings-note,.booking-step-setting,.schedule-day,.day-off-item,.portfolio-photo-field
+) {
+  border-color:var(--theme-line)!important;
+  background:var(--theme-surface-alt)!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(
+  .date-nav-button,.date-today-button,.schedule-date-picker,.refresh-button,.sync-tool-button,.journal-mode-toggle,
+  .booking-filters button,.notification-filters,.notification-filters button,.report-periods,.report-periods button,
+  .secondary-button:not(.danger),.logout-button,.topbar-client-link,.sync-state,input,select,textarea,.field-with-unit,
+  .provider-display-form .settings-check,.provider-layout-option,.provider-theme-option,.report-mini-toggle
+) {
+  border:1px solid var(--theme-line)!important;
+  border-radius:var(--material-control-radius)!important;
+  background:#202522!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(
+  .primary,.date-strip button.active,.calendar-view-toggle button.active,.journal-mode-toggle button.active,
+  .booking-filters button.active,.notification-filters button.active,.report-periods button.active,
+  .report-data-source button.active,.report-mini-toggle button.active
+) {
+  border-color:var(--theme-accent)!important;
+  background:var(--theme-accent)!important;
+  background-image:none!important;
+  color:var(--theme-accent-contrast)!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.15)!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.primary,.journal-mode-toggle button.active)>span {
+  color:var(--theme-accent-contrast)!important;
+}
+
+.provider-body[data-provider-theme="loft"] .date-strip {
+  gap:4px!important;
+  padding:8px!important;
+}
+
+.provider-body[data-provider-theme="loft"] .date-strip button {
+  min-height:64px!important;
+  margin:0!important;
+  border:1px solid transparent!important;
+  border-radius:12px!important;
+  background:transparent!important;
+  color:var(--theme-muted)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .date-strip button.active {
+  border-color:rgba(196,135,101,.38)!important;
+  background:#c48765!important;
+  color:#1f1510!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.timeline-stage,.team-dispatcher-stage) {
+  border-color:var(--theme-line)!important;
+  background:#191d1b!important;
+  background-image:none!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)!important;
+}
+
+.provider-body[data-provider-theme="loft"] .timeline-grid-line {
+  background:rgba(255,255,255,.08)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.timeline-view .timeline-booking,.schedule-list .provider-booking) {
+  border-color:color-mix(in srgb,var(--booking-tone,var(--theme-accent)) 32%,var(--theme-line))!important;
+  border-radius:14px!important;
+  background:color-mix(in srgb,var(--theme-surface) 92%,var(--booking-tone,var(--theme-accent)))!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.14)!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.booking-client-visit,.timeline-client-visit,.booking-status,.client-badge) {
+  border-color:rgba(196,135,101,.22)!important;
+  background:var(--theme-accent-soft)!important;
+  color:#dca17f!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.report-command-kicker i,.report-command-center::after) {
+  animation:none!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .report-command-center::after {
+  display:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-mobile-nav {
+  border:1px solid var(--theme-line)!important;
+  border-radius:20px!important;
+  background:rgba(29,33,31,.96)!important;
+  background-image:none!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.25)!important;
+  backdrop-filter:blur(18px);
+}
+
+.provider-body[data-provider-theme="loft"] .provider-mobile-nav :is(button,a) {
+  color:var(--theme-muted)!important;
+}
+
+.provider-body[data-provider-theme="loft"] .provider-mobile-nav button.active {
+  border-color:rgba(196,135,101,.22)!important;
+  border-radius:14px!important;
+  background:var(--theme-accent-soft)!important;
+  color:#dca17f!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="loft"] :is(.booking-sheet-panel,.notification-template-dialog,.service-creator-dialog,.dialog-card,.modal-card) {
+  border-color:var(--theme-line)!important;
+  background:#1d211f!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.38)!important;
+}
+
+@media (max-width:760px) {
+  .provider-body[data-provider-theme="loft"] {
+    background:linear-gradient(180deg,#151817,#1a1e1c)!important;
+  }
+
+  .provider-body[data-provider-theme="loft"] :is(.provider-topbar,.provider-view) {
+    margin-top:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    backdrop-filter:none!important;
+  }
+
+  .provider-body[data-provider-theme="loft"] :is(.panel,.schedule-card,.clients-directory,.client-profile,.settings-card,.notification-card,.report-command-center) {
+    box-shadow:0 8px 22px rgba(0,0,0,.16)!important;
+  }
+
+  .provider-body[data-provider-theme="loft"] .date-strip button,
+  .provider-body[data-provider-theme="loft"] .date-strip button.active {
+    min-height:56px!important;
+    padding:6px 2px!important;
+  }
+}

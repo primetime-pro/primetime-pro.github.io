@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 112" fill="none">
+  <!-- Sparse, open rosettes: a flat pearl print, with no repeating tile or fur. -->
+  <g stroke="#a9a39c" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(13 24) rotate(-16 24 22)">
+      <path d="M13 10C18 4 30 5 35 12C41 13 45 20 42 27C38 32 39 40 30 42" stroke-width="5"/>
+      <path d="M19 43C12 43 6 38 8 31C2 25 5 17 9 16" stroke-width="6"/>
+      <path d="M20 18C25 15 33 19 32 25C30 30 21 31 18 26Z" fill="#e4e0da" stroke="none"/>
+    </g>
+    <g transform="translate(91 5) rotate(18 23 22)">
+      <path d="M8 16C6 9 16 4 23 7C28 1 38 7 38 13" stroke-width="5"/>
+      <path d="M43 21C47 28 39 32 36 39C31 44 23 40 19 42C12 43 6 34 9 29" stroke-width="6"/>
+      <path d="M19 18C25 13 33 19 31 25C29 30 21 31 17 26Z" fill="#e8e4df" stroke="none"/>
+    </g>
+    <g transform="translate(160 56) rotate(-25 23 22)">
+      <path d="M8 19C4 12 12 5 20 8C25 3 34 7 35 14C42 14 44 23 40 27" stroke-width="5.5"/>
+      <path d="M33 36C30 44 19 40 16 36C8 37 4 31 7 26" stroke-width="6"/>
+      <path d="M18 18C24 14 32 19 30 25C27 30 19 27 17 24Z" fill="#e4e0da" stroke="none"/>
+    </g>
+    <g transform="translate(234 17) rotate(14 23 22)">
+      <path d="M8 13C10 6 20 4 25 8C33 4 40 11 38 17" stroke-width="5.5"/>
+      <path d="M43 25C43 32 34 35 31 41C24 45 17 39 14 34C6 35 4 27 7 23" stroke-width="6"/>
+      <path d="M20 17C27 15 34 22 30 27C27 32 17 28 17 23Z" fill="#e8e4df" stroke="none"/>
+    </g>
+  </g>
+  <g fill="#bbb5ad">
+    <path d="M72 80C77 76 82 82 79 87C75 91 68 85 72 80Z"/>
+    <path d="M155 20C159 17 164 21 161 25C156 29 151 24 155 20Z"/>
+    <path d="M222 89C227 84 233 90 229 94C224 98 219 93 222 89Z"/>
+  </g>
+</svg>

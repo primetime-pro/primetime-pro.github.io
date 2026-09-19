@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f7">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="description" content="Понятные инструкции по работе с онлайн-записью PrimeTime Pro.">
+  <title>Помощь PrimeTime Pro</title>
+  <link rel="icon" href="../provider-icon.svg?v=811" type="image/svg+xml">
+  <link rel="stylesheet" href="help.css?v=811">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Перейти к содержанию</a>
+  <header class="help-header">
+    <a class="help-brand" href="index.html" aria-label="Помощь PrimeTime Pro — на главную">
+      <span class="help-brand-mark">PT</span>
+      <span><strong>PrimeTime Pro</strong><small>Помощь</small></span>
+    </a>
+    <nav class="help-header-nav" aria-label="Основная навигация">
+      <a href="#sections">Все разделы</a>
+      <a class="help-product-link" id="productLink" href="../provider.html"><span>Открыть PrimeTime Pro</span><svg aria-hidden="true"><use href="../ui-icons.svg#icon-arrow-right"></use></svg></a>
+    </nav>
+  </header>
+
+  <main id="mainContent">
+    <section class="help-intro" aria-labelledby="helpTitle">
+      <p class="help-eyebrow">База знаний</p>
+      <h1 id="helpTitle">Найдите ответ за минуту</h1>
+      <p class="help-intro-copy" id="helpIntroCopy">Инструкции для работы в кабинете — без клиентских материалов и лишних шагов.</p>
+      <form class="help-search" id="helpSearch" role="search">
+        <svg aria-hidden="true"><use href="../ui-icons.svg#icon-search"></use></svg>
+        <label class="sr-only" for="helpSearchInput">Поиск по базе знаний</label>
+        <input id="helpSearchInput" type="search" autocomplete="off" placeholder="Например, настроить расписание" aria-controls="searchResults" aria-expanded="false">
+        <kbd aria-hidden="true">Ctrl K</kbd>
+        <div class="search-results" id="searchResults" aria-live="polite" hidden></div>
+      </form>
+      <div class="audience-switch" role="group" aria-label="Выберите тип инструкций">
+        <button class="active" type="button" data-audience="specialist" aria-pressed="true">Для специалиста</button>
+        <button type="button" data-audience="client" aria-pressed="false">Для клиента</button>
+      </div>
+    </section>
+
+    <section class="help-sections" id="sections" aria-labelledby="sectionsTitle">
+      <div class="section-heading">
+        <div><p>Всё по темам</p><h2 id="sectionsTitle">Выберите раздел</h2></div>
+        <span id="sectionCount"></span>
+      </div>
+      <div class="section-grid" id="sectionGrid"></div>
+    </section>
+
+    <section class="popular-guides" aria-labelledby="popularTitle">
+      <div class="section-heading"><div><p>Часто открывают</p><h2 id="popularTitle">Популярные инструкции</h2></div></div>
+      <div class="guide-list" id="popularGuides"></div>
+    </section>
+  </main>
+
+  <footer class="help-footer">
+    <span>© PrimeTime Pro</span>
+    <div><a href="../privacy.html">Конфиденциальность</a><a id="footerProductLink" href="../provider.html">Вернуться в кабинет</a></div>
+  </footer>
+  <script src="help-data.js?v=811"></script>
+  <script src="help.js?v=811" defer></script>
+  <script src="../site-update.js?v=817" defer></script>
+</body>
+</html>

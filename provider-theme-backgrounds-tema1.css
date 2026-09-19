@@ -1,0 +1,423 @@
+/* Approved full-viewport canvases: one composition, never a tiled page texture. */
+.provider-body[data-provider-theme="snow-leopard"][data-provider-layout],
+.provider-body[data-provider-theme="pearl-zebra"][data-provider-layout],
+.provider-body[data-provider-theme="concrete-signal"][data-provider-layout],
+.provider-body[data-provider-theme="luxury"][data-provider-layout],
+.provider-body[data-provider-theme="cocoa-pearl"][data-provider-layout],
+.provider-body[data-provider-theme="coastal"][data-provider-layout],
+.provider-body[data-provider-theme="midnight"][data-provider-layout],
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  background-size:cover!important;
+  background-attachment:fixed!important;
+}
+
+.provider-body[data-provider-theme="snow-leopard"][data-provider-layout] {
+  background-color:#eaf2f6!important;
+  background-image:
+    linear-gradient(rgba(249,252,254,.23),rgba(243,249,252,.23)),
+    url("provider-snow-leopard-desktop-v2.webp")!important;
+}
+
+.provider-body[data-provider-theme="pearl-zebra"][data-provider-layout] {
+  background-color:#f4ede3!important;
+  background-image:
+    linear-gradient(rgba(255,251,246,.18),rgba(250,242,232,.18)),
+    url("provider-pearl-zebra-desktop-v3.webp")!important;
+}
+
+.provider-body[data-provider-theme="concrete-signal"][data-provider-layout] {
+  background-color:#e9edef!important;
+  background-image:
+    linear-gradient(rgba(250,251,251,.18),rgba(245,248,249,.18)),
+    url("provider-concrete-signal-desktop-v1.webp")!important;
+}
+
+.provider-body[data-provider-theme="luxury"][data-provider-layout] {
+  background-color:#040506!important;
+  background-image:
+    linear-gradient(rgba(2,3,4,.22),rgba(2,3,4,.22)),
+    url("provider-luxury-premium-desktop-v1.webp")!important;
+}
+
+.provider-body[data-provider-theme="cocoa-pearl"][data-provider-layout] {
+  background-color:#28221f!important;
+  background-image:
+    radial-gradient(ellipse 68% 92% at 50% 48%,rgba(24,14,10,.22) 0%,rgba(24,14,10,.12) 58%,rgba(24,14,10,.04) 100%),
+    url("provider-cocoa-pearl-desktop-v1.webp")!important;
+}
+
+.provider-body[data-provider-theme="coastal"][data-provider-layout] {
+  background-color:#f4f1eb!important;
+  background-image:
+    linear-gradient(rgba(250,249,246,.74),rgba(250,249,246,.74)),
+    url("provider-coastal-porcelain-material-v1.webp")!important;
+}
+
+.provider-body[data-provider-theme="midnight"][data-provider-layout] {
+  background-color:#061426!important;
+  background-image:
+    linear-gradient(rgba(4,15,30,.66),rgba(4,15,30,.66)),
+    url("provider-midnight-navy-velvet-v1.webp")!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+  background-color:#0f0f0e!important;
+  background-image:
+    linear-gradient(rgba(15,15,14,.72),rgba(15,15,14,.72)),
+    url("provider-noir-suede-material-v1.webp")!important;
+}
+
+/* The artwork belongs to the outer canvas; operational surfaces remain clean. */
+.provider-body:is(
+  [data-provider-theme="snow-leopard"],
+  [data-provider-theme="pearl-zebra"],
+  [data-provider-theme="concrete-signal"],
+  [data-provider-theme="luxury"],
+  [data-provider-theme="cocoa-pearl"],
+  [data-provider-theme="coastal"],
+  [data-provider-theme="midnight"],
+  [data-provider-theme="noir-safari"]
+)[data-provider-layout] :is(.provider-main,.provider-app,.provider-workspace,.provider-view,.schedule-card) {
+  background-color:transparent!important;
+  background-image:none!important;
+}
+
+.provider-body[data-provider-theme="coastal"][data-provider-layout] .schedule-card {
+  border-color:rgba(150,145,136,.44)!important;
+  background-color:rgba(255,253,248,.96)!important;
+  box-shadow:0 12px 34px rgba(42,61,70,.07)!important;
+}
+
+.provider-body[data-provider-theme="midnight"][data-provider-layout] .schedule-card {
+  border-color:rgba(74,106,137,.48)!important;
+  background-color:rgba(8,28,50,.96)!important;
+  box-shadow:0 12px 34px rgba(0,4,12,.22)!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .schedule-card {
+  border-color:rgba(104,88,75,.40)!important;
+  background-color:rgba(25,24,23,.97)!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.20)!important;
+}
+
+.provider-body:is(
+  [data-provider-theme="coastal"],
+  [data-provider-theme="midnight"],
+  [data-provider-theme="noir-safari"]
+)[data-provider-layout] :is(.date-navigation,.date-strip,.schedule-toolbar,.timeline-stage) {
+  border-color:color-mix(in srgb,var(--theme-line) 34%,transparent)!important;
+  box-shadow:none!important;
+}
+
+.provider-body:is(
+  [data-provider-theme="snow-leopard"],
+  [data-provider-theme="pearl-zebra"],
+  [data-provider-theme="concrete-signal"],
+  [data-provider-theme="luxury"],
+  [data-provider-theme="cocoa-pearl"],
+  [data-provider-theme="coastal"],
+  [data-provider-theme="midnight"],
+  [data-provider-theme="noir-safari"]
+)[data-provider-layout] :is(
+  .provider-sidebar,
+  .provider-topbar,
+  .provider-appearance-popover,
+  .date-navigation,
+  .date-strip,
+  .schedule-toolbar,
+  .timeline-stage,
+  .calendar-overview-day,
+  .provider-mobile-nav,
+  .booking-sheet,
+  dialog
+) {
+  background-image:none!important;
+}
+
+.provider-body:is(
+  [data-provider-theme="snow-leopard"],
+  [data-provider-theme="pearl-zebra"],
+  [data-provider-theme="concrete-signal"],
+  [data-provider-theme="luxury"],
+  [data-provider-theme="cocoa-pearl"],
+  [data-provider-theme="coastal"],
+  [data-provider-theme="midnight"],
+  [data-provider-theme="noir-safari"]
+)[data-provider-layout] :is(.provider-booking,.timeline-booking,.calendar-overview-booking,.provider-break,.timeline-break) {
+  background-image:none!important;
+}
+
+/* Theme previews show the same motifs without allowing them to reshape the picker. */
+.theme-snow-leopard .theme-swatch {
+  background:#eaf2f6 url("provider-snow-leopard-desktop-v2.webp") center/cover no-repeat!important;
+}
+.theme-pearl-zebra .theme-swatch {
+  background:#f4ede3 url("provider-pearl-zebra-desktop-v3.webp") center/cover no-repeat!important;
+}
+.theme-concrete-signal .theme-swatch {
+  background:#e9edef url("provider-concrete-signal-desktop-v1.webp") center/cover no-repeat!important;
+}
+.theme-luxury .theme-swatch {
+  background:#040506 url("provider-luxury-premium-desktop-v1.webp") center/cover no-repeat!important;
+}
+.theme-cocoa-pearl .theme-swatch {
+  background:#28221f url("provider-cocoa-pearl-desktop-v1.webp") center/cover no-repeat!important;
+}
+.theme-coastal .theme-swatch {
+  background-color:#f4f1eb!important;
+  background-image:linear-gradient(rgba(250,249,246,.62),rgba(250,249,246,.62)),url("provider-coastal-porcelain-material-v1.webp")!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+}
+.theme-midnight .theme-swatch {
+  background-color:#061426!important;
+  background-image:linear-gradient(rgba(4,15,30,.54),rgba(4,15,30,.54)),url("provider-midnight-navy-velvet-v1.webp")!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+}
+.theme-noir-safari .theme-swatch {
+  background-color:#0f0f0e!important;
+  background-image:linear-gradient(rgba(15,15,14,.60),rgba(15,15,14,.60)),url("provider-noir-suede-material-v1.webp")!important;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+}
+.provider-body[data-provider-theme][data-provider-layout] .provider-theme-option {
+  overflow:hidden!important;
+  border-radius:13px!important;
+  contain:paint;
+}
+.provider-body[data-provider-theme][data-provider-layout] .provider-theme-option .theme-swatch {
+  overflow:hidden!important;
+  border-radius:10px!important;
+}
+.provider-body[data-provider-theme][data-provider-layout] .provider-theme-option .theme-swatch i {
+  border-radius:3px!important;
+}
+
+@media (max-width:760px) {
+  .provider-body[data-provider-theme="snow-leopard"][data-provider-layout],
+  .provider-body[data-provider-theme="pearl-zebra"][data-provider-layout],
+  .provider-body[data-provider-theme="concrete-signal"][data-provider-layout],
+  .provider-body[data-provider-theme="luxury"][data-provider-layout],
+  .provider-body[data-provider-theme="cocoa-pearl"][data-provider-layout],
+  .provider-body[data-provider-theme="coastal"][data-provider-layout],
+  .provider-body[data-provider-theme="midnight"][data-provider-layout],
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+    background-position:center top!important;
+    background-size:cover!important;
+    background-attachment:fixed!important;
+  }
+
+  .provider-body[data-provider-theme="snow-leopard"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(249,252,254,.28),rgba(243,249,252,.28)),
+      url("provider-snow-leopard-mobile-v2.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="pearl-zebra"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(255,251,246,.22),rgba(250,242,232,.22)),
+      url("provider-pearl-zebra-mobile-v3.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="concrete-signal"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(250,251,251,.22),rgba(245,248,249,.22)),
+      url("provider-concrete-signal-mobile-v1.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="luxury"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(2,3,4,.26),rgba(2,3,4,.26)),
+      url("provider-luxury-premium-mobile-v1.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="cocoa-pearl"][data-provider-layout] {
+    background-image:
+      radial-gradient(ellipse 86% 88% at 50% 45%,rgba(24,14,10,.18) 0%,rgba(24,14,10,.10) 60%,rgba(24,14,10,.03) 100%),
+      url("provider-cocoa-pearl-mobile-v1.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="coastal"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(250,249,246,.80),rgba(250,249,246,.80)),
+      url("provider-coastal-porcelain-material-v1.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="midnight"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(4,15,30,.72),rgba(4,15,30,.72)),
+      url("provider-midnight-navy-velvet-v1.webp")!important;
+  }
+
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+    background-image:
+      linear-gradient(rgba(15,15,14,.78),rgba(15,15,14,.78)),
+      url("provider-noir-suede-material-v1.webp")!important;
+  }
+
+  .provider-body:is(
+    [data-provider-theme="coastal"],
+    [data-provider-theme="midnight"],
+    [data-provider-theme="noir-safari"]
+  )[data-provider-layout] .provider-mobile-nav {
+    border-color:color-mix(in srgb,var(--theme-line) 34%,transparent)!important;
+    box-shadow:0 8px 24px color-mix(in srgb,var(--theme-shadow) 72%,transparent)!important;
+  }
+
+}
+
+@media (prefers-reduced-data:reduce) {
+  .provider-body[data-provider-theme="snow-leopard"][data-provider-layout],
+  .provider-body[data-provider-theme="pearl-zebra"][data-provider-layout],
+  .provider-body[data-provider-theme="concrete-signal"][data-provider-layout],
+  .provider-body[data-provider-theme="luxury"][data-provider-layout],
+  .provider-body[data-provider-theme="cocoa-pearl"][data-provider-layout],
+  .provider-body[data-provider-theme="coastal"][data-provider-layout],
+  .provider-body[data-provider-theme="midnight"][data-provider-layout],
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+    background-image:var(--atmosphere-background)!important;
+  }
+}
+
+/* Forged metal canvases for the dark Cobalt Forge and Petrol Steel themes. */
+.provider-body[data-provider-theme="cobalt-forge"][data-provider-layout]:not([data-provider-layout=""]),
+.provider-body[data-provider-theme="petrol-steel"][data-provider-layout]:not([data-provider-layout=""]) {
+  background-image:none!important;
+}
+
+.provider-body[data-provider-theme="cobalt-forge"][data-provider-layout]:not([data-provider-layout=""]) {
+  background-color:#071226!important;
+}
+
+.provider-body[data-provider-theme="petrol-steel"][data-provider-layout]:not([data-provider-layout=""]) {
+  background-color:#0b1b1e!important;
+}
+
+/* Keep artwork tied to the viewport, not to the full document height. */
+.provider-body:is(
+  [data-provider-theme="cobalt-forge"],
+  [data-provider-theme="petrol-steel"]
+)[data-provider-layout]:not([data-provider-layout=""])::after {
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+
+.provider-body[data-provider-theme="cobalt-forge"][data-provider-layout]:not([data-provider-layout=""])::after {
+  background-color:#071226;
+  background-image:
+    radial-gradient(ellipse 68% 100% at 52% 46%,rgba(2,7,16,.28) 0%,rgba(2,7,16,.18) 58%,rgba(2,7,16,.06) 100%),
+    url("provider-cobalt-forge-desktop-v3.webp");
+}
+
+.provider-body[data-provider-theme="petrol-steel"][data-provider-layout]:not([data-provider-layout=""])::after {
+  background-color:#0b1b1e;
+  background-image:
+    radial-gradient(ellipse 72% 104% at 50% 44%,rgba(2,13,14,.58) 0%,rgba(2,13,14,.38) 58%,rgba(1,7,8,.10) 100%),
+    url("provider-petrol-steel-desktop-v2.webp");
+}
+
+.provider-body:is(
+  [data-provider-theme="cobalt-forge"],
+  [data-provider-theme="petrol-steel"]
+)[data-provider-layout] :is(
+  .provider-sidebar,
+  .provider-topbar,
+  .provider-appearance-popover,
+  .date-navigation,
+  .date-strip,
+  .schedule-toolbar,
+  .timeline-stage,
+  .calendar-overview-day,
+  .provider-mobile-nav,
+  .booking-sheet,
+  dialog
+) {
+  background-image:none!important;
+}
+
+.provider-body:is(
+  [data-provider-theme="cobalt-forge"],
+  [data-provider-theme="petrol-steel"]
+)[data-provider-layout] :is(.provider-booking,.timeline-booking,.calendar-overview-booking,.provider-break,.timeline-break) {
+  background-image:none!important;
+}
+
+/* The appearance picker is a neutral settings component.
+   A selected theme or layout may recolour it, but must never reshape it. */
+.provider-body.provider-body[data-provider-theme][data-provider-layout] .provider-layout-options .provider-layout-option {
+  overflow:hidden!important;
+  border:1px solid color-mix(in srgb,var(--theme-line) 72%,transparent)!important;
+  border-radius:14px!important;
+  background:var(--theme-surface)!important;
+  background-image:none!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+  contain:paint;
+}
+
+.provider-body.provider-body[data-provider-theme][data-provider-layout] .provider-layout-options label.provider-layout-option:has(> input[type="radio"][name="providerLayout"]:checked) {
+  border:1px solid #2d5b7a!important;
+  box-shadow:none!important;
+}
+
+.provider-body.provider-body[data-provider-theme][data-provider-layout] .provider-layout-options label.provider-layout-option:has(> input[type="radio"][name="providerLayout"]:checked)::after {
+  top:10px!important;
+  right:10px!important;
+  width:17px!important;
+  height:17px!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:#2d5b7a!important;
+  color:#fff!important;
+  box-shadow:none!important;
+}
+
+.provider-body.provider-body[data-provider-theme][data-provider-layout] .provider-layout-options .provider-layout-option .theme-swatch {
+  overflow:hidden!important;
+  border-radius:10px!important;
+}
+
+.theme-cobalt-forge .theme-swatch {
+  background:#071226 url("provider-cobalt-forge-desktop-v3.webp") center/cover no-repeat!important;
+}
+
+.theme-petrol-steel .theme-swatch {
+  background:#0b1b1e url("provider-petrol-steel-desktop-v2.webp") center/cover no-repeat!important;
+}
+
+@media (max-width:760px) {
+  .provider-body[data-provider-theme="cobalt-forge"][data-provider-layout]:not([data-provider-layout=""])::after {
+    background-image:
+      radial-gradient(ellipse 92% 88% at 50% 45%,rgba(2,7,16,.24) 0%,rgba(2,7,16,.14) 60%,rgba(2,7,16,.04) 100%),
+      url("provider-cobalt-forge-mobile-v3.webp");
+    background-position:center top;
+  }
+
+  .provider-body[data-provider-theme="petrol-steel"][data-provider-layout]:not([data-provider-layout=""])::after {
+    background-image:
+      radial-gradient(ellipse 96% 88% at 50% 45%,rgba(2,13,14,.46) 0%,rgba(2,13,14,.30) 60%,rgba(1,7,8,.08) 100%),
+      url("provider-petrol-steel-mobile-v2.webp");
+    background-position:center top;
+  }
+}
+
+@media (prefers-reduced-data:reduce) {
+  .provider-body:is(
+    [data-provider-theme="cobalt-forge"],
+    [data-provider-theme="petrol-steel"]
+  )[data-provider-layout]:not([data-provider-layout=""])::after {
+    background-image:var(--atmosphere-background);
+  }
+}

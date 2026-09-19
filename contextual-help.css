@@ -1,0 +1,198 @@
+.contextual-help {
+  --contextual-help-ink: var(--theme-ink, var(--ink, #183427));
+  --contextual-help-muted: var(--theme-muted, var(--muted, #62766c));
+  --contextual-help-line: var(--theme-line, var(--line, #dce7df));
+  --contextual-help-accent: var(--theme-accent, var(--green, #347258));
+  --contextual-help-soft: var(--theme-accent-soft, var(--soft, #f1f7f3));
+  --contextual-help-surface: var(--theme-surface, var(--white, #fff));
+  margin-top: 8px;
+  color: var(--contextual-help-ink);
+  font: inherit;
+}
+
+[data-contextual-help] {
+  min-width: 0;
+}
+
+.provider-body .organization-overview > [data-contextual-help] {
+  grid-column: 1 / -1;
+}
+
+.provider-body .settings-card > [data-contextual-help] {
+  grid-column: 2;
+}
+
+.contextual-help__trigger {
+  appearance: none;
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  padding: 3px 0;
+  border: 0;
+  border-bottom: 1px dotted currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--contextual-help-muted);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 650;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: color .16s ease, border-color .16s ease;
+}
+
+.contextual-help__trigger:hover,
+.contextual-help__trigger[aria-expanded="true"] {
+  color: var(--contextual-help-accent);
+}
+
+.contextual-help__trigger:focus-visible,
+.contextual-help__action:focus-visible {
+  outline: 2px solid var(--contextual-help-accent);
+  outline-offset: 3px;
+}
+
+.contextual-help--danger .contextual-help__trigger {
+  color: #9b5b35;
+}
+
+.contextual-help__panel {
+  width: min(100%, 620px);
+  margin-top: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--contextual-help-line);
+  border-radius: 12px;
+  background: var(--contextual-help-surface);
+  background: color-mix(in srgb, var(--contextual-help-surface) 82%, var(--contextual-help-soft));
+  color: var(--contextual-help-ink);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--contextual-help-ink) 8%, transparent);
+}
+
+.contextual-help__panel:not([hidden]) {
+  animation: contextual-help-reveal .16s ease-out both;
+}
+
+.contextual-help__title,
+.contextual-help__summary,
+.contextual-help__detail p {
+  margin: 0;
+}
+
+.contextual-help__title {
+  margin-bottom: 5px;
+  font-size: .94rem;
+  line-height: 1.35;
+}
+
+.contextual-help__summary,
+.contextual-help__detail p {
+  color: var(--contextual-help-muted);
+  font-size: .86rem;
+  line-height: 1.55;
+}
+
+.contextual-help__details {
+  display: grid;
+  gap: 9px;
+  margin-top: 11px;
+}
+
+.contextual-help__detail {
+  display: grid;
+  gap: 2px;
+  padding-top: 9px;
+  border-top: 1px solid var(--contextual-help-line);
+}
+
+.contextual-help__detail strong {
+  font-size: .76rem;
+  font-weight: 750;
+  letter-spacing: .01em;
+}
+
+.contextual-help__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px 14px;
+  margin-top: 12px;
+}
+
+.contextual-help__action {
+  appearance: none;
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--contextual-help-accent);
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.contextual-help__action:hover {
+  border-bottom-color: currentColor;
+}
+
+@keyframes contextual-help-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 560px) {
+  .provider-body .settings-card > [data-contextual-help] {
+    grid-column: 1 / -1;
+  }
+
+  .contextual-help {
+    margin-top: 7px;
+  }
+
+  .contextual-help__trigger {
+    min-height: 40px;
+  }
+
+  .contextual-help__panel {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  .contextual-help__actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .contextual-help__action {
+    min-height: 42px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contextual-help__trigger,
+  .contextual-help__action {
+    transition: none;
+  }
+
+  .contextual-help__panel:not([hidden]) {
+    animation: none;
+  }
+}

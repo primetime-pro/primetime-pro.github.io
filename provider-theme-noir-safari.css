@@ -1,0 +1,357 @@
+/* Noir Suede: graphite suede surfaces with restrained smoky-cognac accents. */
+.provider-body[data-provider-theme="noir-safari"] {
+  --theme-bg:#0f0f0e;
+  --theme-surface:#191817;
+  --theme-surface-alt:#211f1d;
+  --theme-ink:#f4f0eb;
+  --theme-muted:#bcb4ac;
+  --theme-line:#75685c;
+  --theme-accent:#c0885c;
+  --theme-accent-soft:#2b211a;
+  --theme-accent-contrast:#160f0b;
+  --theme-shadow:rgba(0,0,0,.36);
+  --material-radius:14px;
+  --material-control-radius:10px;
+  --material-card-bg:rgba(25,24,23,.97);
+  --material-card-border:#75685c;
+  --signature-sidebar:rgba(13,13,12,.97);
+  --signature-stage:rgba(20,19,18,.96);
+  --signature-nav-active:#2b211a;
+  --signature-card-shadow:0 14px 34px rgba(0,0,0,.24);
+  --atmosphere-background:#0f0f0e;
+  --atmosphere-panel:rgba(22,21,20,.96);
+  --atmosphere-panel-strong:rgba(27,26,24,.98);
+  color-scheme:dark;
+  color:var(--theme-ink);
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+  background-color:var(--theme-bg)!important;
+  background-image:linear-gradient(rgba(15,15,14,.72),rgba(15,15,14,.72)),url("provider-noir-suede-material-v1.webp")!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  background-size:cover!important;
+  background-attachment:fixed!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"] .ambient {
+  display:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .provider-main,.provider-app,.provider-workspace,.provider-view
+) {
+  background:transparent!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  h1,h2,h3,h4,.provider-topbar h1,.schedule-title-line h2,.view-title
+) {
+  color:var(--theme-ink)!important;
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  text-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .provider-sidebar,.provider-mobile-nav
+) {
+  border-color:rgba(104,88,75,.38)!important;
+  background:rgba(13,13,12,.97)!important;
+  box-shadow:none!important;
+  backdrop-filter:blur(14px);
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-topbar {
+  border-bottom:1px solid rgba(104,88,75,.30)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .panel,.settings-card,.clients-directory,.client-profile,.notification-card,.waitlist-provider-card,
+  .report-summary article,.report-comparison,.report-business-card,.report-performers,.report-visual-grid>.panel,
+  .portfolio-card,.provider-review-card,.service-editor,.team-calendar-toolbar,.report-command-center,
+  .calendar-overview-day,.calendar-overview-booking,.team-calendar-columns .team-calendar-group,
+  .connection-log-entry,.provider-booking,.timeline-stage,.date-navigation,.date-strip,.schedule-toolbar,
+  .schedule-empty,.service-form,.organization-row,.organization-create,.weekly-schedule-panel,
+  .booking-rules-card,.client-history-item,.client-disclosure,.voice-assistant-dialog,.booking-sheet
+) {
+  border-color:rgba(104,88,75,.38)!important;
+  background:rgba(25,24,23,.96)!important;
+  color:var(--theme-ink)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18)!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .provider-current-moment,.view-description,.panel-description,.provider-user small,.client-list-item small,
+  .client-list-item i,.client-profile small,.client-history-item small,.sync-state small,.settings-card small,
+  .notification-card p,.waitlist-provider-card p,.report-card small,.organization-row small,.service-card small
+) {
+  color:var(--theme-muted)!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  input,select,textarea,.field-with-unit,.client-search,.notification-filters,.report-periods,
+  .journal-mode-toggle,.calendar-view-toggle,.booking-filters,.provider-section-nav
+) {
+  border-color:rgba(104,88,75,.40)!important;
+  background:rgba(17,17,16,.96)!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(input,textarea)::placeholder {
+  color:#9d948b!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .secondary-button:not(.danger),.logout-button,.date-nav-button,.date-today-button,.refresh-button,
+  .sync-tool-button,.voice-assistant-open,.desktop-app-install,.client-profile-back,
+  .notification-card-actions button,.report-periods button,.booking-filters button
+) {
+  border-color:rgba(104,88,75,.42)!important;
+  background:rgba(18,18,17,.96)!important;
+  color:#e7dfd7!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .secondary-button:not(.danger),.logout-button,.date-nav-button,.date-today-button,.refresh-button,
+  .sync-tool-button,.voice-assistant-open,.desktop-app-install,.client-profile-back,
+  .notification-card-actions button,.report-periods button,.booking-filters button
+):hover {
+  border-color:#7c5d47!important;
+  background:#29231f!important;
+  color:#fff7f0!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .primary,.booking-sheet .primary,.service-form .primary
+) {
+  border-color:#c9956b!important;
+  background:#c0885c!important;
+  color:#160f0b!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .primary>span {
+  color:#160f0b!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .topbar-client-link {
+  border-color:#9b704f!important;
+  background:#765038!important;
+  color:#fff5ec!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .topbar-client-link:hover {
+  border-color:#ad7c58!important;
+  background:#855c41!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .brand-mark,.user-avatar,.provider-user-avatar,.client-list-avatar,.client-avatar,
+  .booking-sheet-client-avatar,.organization-avatar,.member-avatar
+) {
+  border:1px solid #88654c!important;
+  background:#aa7b58!important;
+  color:#1d1510!important;
+  text-shadow:none!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-brand .brand-mark {
+  border-radius:50%!important;
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-weight:700!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-brand strong {
+  color:#f3eee8!important;
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-weight:700!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-brand small {
+  color:#b9855d!important;
+  letter-spacing:.12em;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-user {
+  border:1px solid rgba(91,74,61,.60)!important;
+  background:rgba(22,20,19,.94)!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-nav button {
+  border-color:transparent!important;
+  background:transparent!important;
+  color:#d8d0c8!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .provider-nav button>span:nth-child(2),.sidebar-bottom>a>span,.sidebar-bottom>button>span,.logout-button
+) {
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-weight:600!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-nav button:hover {
+  background:rgba(64,49,39,.42)!important;
+  color:#fff7f0!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-nav button.active {
+  border-color:#76553e!important;
+  background:#2c231d!important;
+  color:#fff4eb!important;
+  box-shadow:inset 4px 0 0 #aa7249!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-nav button.active>span:first-child,
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-nav button>span:first-child {
+  background:transparent!important;
+  color:#b9825a!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(.provider-nav b,.panel-count,.dashboard-summary) {
+  border-color:#76563f!important;
+  background:#2d241e!important;
+  color:#c18a61!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-list-item {
+  border-color:transparent!important;
+  background:rgba(20,19,18,.62)!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-list-item:hover {
+  border-color:rgba(118,86,63,.72)!important;
+  background:rgba(48,40,34,.78)!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-list-item.active {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border-color:#76553e!important;
+  background:#2c231d!important;
+  box-shadow:inset 4px 0 0 #aa7249!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-list-item.active::before {
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:0;
+  background:rgba(68,49,37,.34);
+  pointer-events:none;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-list-item.active>* {
+  position:relative;
+  z-index:1;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-list-item>b {
+  border:1px solid rgba(118,86,63,.58)!important;
+  background:#211c18!important;
+  color:#b9825a!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  a,.provider-link,.view-title-actions button,.settings-help-link,.client-list-item i,
+  .provider-current-moment strong,.provider-current-moment b
+) {
+  color:#b9825a;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(button,a,input,select,textarea):focus-visible {
+  outline:2px solid #c0885c!important;
+  outline-offset:2px;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-mobile-nav :is(button,a) {
+  color:#bdb4ab!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-mobile-nav button.active {
+  background:#2c231d!important;
+  color:#c58d64!important;
+  box-shadow:none!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+  .provider-section-nav button.active,.journal-mode-toggle button.active,.calendar-view-toggle button.active,
+  .booking-filters button.active,.notification-filters button.active,.report-periods button.active,
+  .report-data-source button.active,.report-mini-toggle button.active
+) {
+  border-color:#76553e!important;
+  background:#2c231d!important;
+  color:#c58d64!important;
+  box-shadow:inset 3px 0 0 #aa7249!important;
+}
+
+.provider-body[data-provider-theme="noir-safari"][data-provider-layout] .client-profile-empty>span {
+  width:68px!important;
+  height:68px!important;
+  border:1px solid #88654c!important;
+  border-radius:50%!important;
+  background:#aa7b58!important;
+  color:#1d1510!important;
+  box-shadow:none!important;
+}
+
+.theme-noir-safari {
+  --theme-preview-bg:#11100f;
+  --theme-preview-surface:#1b1917;
+  --theme-preview-line:#786250;
+  --theme-preview-accent:#aa7249;
+  --theme-preview-radius:12px;
+}
+
+.theme-noir-safari .theme-swatch {
+  background-image:url("provider-noir-suede-material-v1.webp")!important;
+  background-position:center!important;
+  background-size:cover!important;
+}
+
+.theme-noir-safari .theme-swatch i:nth-child(1) { background:#aa7b58!important; }
+.theme-noir-safari .theme-swatch i:nth-child(2) { background:#55463b!important; }
+.theme-noir-safari .theme-swatch i:nth-child(3) { background:#aa7249!important; }
+
+@media (max-width:760px) {
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] {
+    background-position:center!important;
+    background-size:cover!important;
+    background-attachment:fixed!important;
+  }
+
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-view {
+    border-color:transparent!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] :is(
+    .provider-view>.view-title,.provider-view>.view-description,.settings-tabs
+  ) {
+    border:0!important;
+    background:transparent!important;
+    border-radius:0!important;
+    padding-inline:0!important;
+  }
+
+  .provider-body[data-provider-theme="noir-safari"][data-provider-layout] .provider-mobile-nav {
+    background:rgba(15,14,13,.96)!important;
+  }
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f7">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="description" content="Раздел базы знаний PrimeTime Pro.">
+  <title>Раздел помощи — PrimeTime Pro</title>
+  <link rel="icon" href="../provider-icon.svg?v=811" type="image/svg+xml">
+  <link rel="stylesheet" href="help.css?v=811">
+</head>
+<body>
+  <a class="skip-link" href="#categoryRoot">Перейти к инструкциям</a>
+  <header class="help-header">
+    <a class="help-brand" href="index.html" aria-label="Помощь PrimeTime Pro — на главную">
+      <span class="help-brand-mark">PT</span>
+      <span><strong>PrimeTime Pro</strong><small>Помощь</small></span>
+    </a>
+    <nav class="help-header-nav" aria-label="Основная навигация">
+      <a href="index.html#sections">Все разделы</a>
+      <a class="help-product-link" id="productLink" href="../provider.html"><span>Открыть PrimeTime Pro</span><svg aria-hidden="true"><use href="../ui-icons.svg#icon-arrow-right"></use></svg></a>
+    </nav>
+  </header>
+
+  <main class="category-shell" id="categoryRoot">
+    <a class="back-link" id="categoryBackLink" href="index.html#sections"><svg aria-hidden="true"><use href="../ui-icons.svg#icon-arrow-left"></use></svg>Все разделы</a>
+    <header class="category-heading">
+      <span class="section-icon" id="categoryIcon"><svg aria-hidden="true"><use href="../ui-icons.svg#icon-list"></use></svg></span>
+      <div><p class="help-eyebrow" id="categoryAudience">Раздел помощи</p><h1 id="categoryTitle">Загружаем раздел…</h1><p id="categoryDescription"></p></div>
+    </header>
+    <section class="category-articles" aria-labelledby="categoryArticlesTitle">
+      <div class="section-heading"><div><p>Пошагово</p><h2 id="categoryArticlesTitle">Все инструкции</h2></div><span id="categoryCount"></span></div>
+      <div class="category-list" id="categoryList"></div>
+    </section>
+    <noscript><p class="article-script-note">Для просмотра списка инструкций включите JavaScript.</p></noscript>
+  </main>
+
+  <footer class="help-footer">
+    <span>© PrimeTime Pro</span>
+    <div><a href="../privacy.html">Конфиденциальность</a><a id="footerProductLink" href="../provider.html">Вернуться в кабинет</a></div>
+  </footer>
+  <script src="help-data.js?v=811"></script>
+  <script src="category.js?v=811" defer></script>
+  <script src="../site-update.js?v=817" defer></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+.visitor-notification-card .notification-card-head span { display:inline-flex; align-items:center; gap:6px; }
+.visitor-notification-card .notification-card-head span i { width:7px; height:7px; border-radius:50%; background:var(--theme-muted,#718178); }
+.visitor-notification-card.is-online .notification-card-head span i { background:#2f9a59; box-shadow:0 0 0 4px color-mix(in srgb,#2f9a59 16%,transparent); }
+.visitor-notification-card.is-online { border-color:color-mix(in srgb,#2f9a59 32%,var(--theme-line,#dce3de)); }
+.visitor-presence-contact { display:flex; align-items:center; gap:8px; margin-top:4px; }
+.visitor-presence-contact a,.visitor-presence-contact span { color:var(--theme-accent,#2f7654); font-size:11px; font-weight:850; text-decoration:none; }
+.visitor-notification-card .notification-card-main>small { display:block; margin-top:5px; color:var(--theme-muted,#718178); font-size:9px; }
+.free-slots-source { margin:14px 0; padding:14px; border:1px solid var(--theme-line,#dce3de); border-radius:14px; }
+.free-slots-source legend { padding:0 6px; color:var(--theme-ink,#283b31); font-size:11px; font-weight:850; }
+.free-slots-source>div { display:flex; flex-wrap:wrap; gap:7px; }
+.free-slots-source label { cursor:pointer; }
+.free-slots-source input { position:absolute; opacity:0; pointer-events:none; }
+.free-slots-source label span { display:block; padding:9px 12px; border:1px solid var(--theme-line,#dce3de); border-radius:999px; background:var(--theme-surface,#fff); color:var(--theme-muted,#718178); font-size:10px; font-weight:850; }
+.free-slots-source label:has(input:checked) span { border-color:var(--theme-accent,#2f7654); background:var(--theme-accent,#2f7654); color:var(--theme-accent-contrast,#fff); }
+.free-slots-source label:has(input:focus-visible) span { outline:2px solid var(--theme-accent,#2f7654); outline-offset:2px; }
+.free-slots-source>small { display:block; margin-top:9px; color:var(--theme-muted,#718178); font-size:9px; line-height:1.45; }
+@media (max-width:680px) {
+  .free-slots-source>div { display:grid; grid-template-columns:1fr 1fr; }
+  .free-slots-source label span { text-align:center; }
+  .visitor-notification-card .notification-card-head { align-items:flex-start; }
+}

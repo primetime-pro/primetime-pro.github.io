@@ -1,0 +1,273 @@
+/* Shared finishing layer: quiet surfaces, readable controls and theme accents.
+   Decorative borders are separate from field/focus borders and calendar lines. */
+.provider-body[data-provider-theme] {
+  --calm-line:color-mix(in srgb,var(--theme-line) 42%,var(--theme-surface));
+  --calm-panel-shadow:0 4px 16px color-mix(in srgb,var(--theme-shadow) 22%,transparent);
+}
+.provider-body[data-provider-theme="warm"] { --theme-accent:#985b43; --theme-accent-contrast:#fff; --theme-surface-alt:#faf7f3; }
+.provider-body[data-provider-theme="eco"] { --theme-surface-alt:#f7f6f0; }
+.provider-body[data-provider-theme="lavender"] { --theme-surface-alt:#f8f7fa; }
+.provider-body[data-provider-theme="hitech"] { --theme-surface-alt:#f3f7f9; }
+.provider-body[data-provider-theme="desert"] { --theme-surface-alt:#f5ede5; --theme-accent-soft:#efded1; }
+.provider-body[data-provider-theme="rose"] { --theme-surface-alt:#f4eef0; --theme-accent-soft:#eadde3; }
+.provider-body[data-provider-theme="mono"] { --atmosphere-background:linear-gradient(180deg,#f7f7f4,#efefeb); }
+.provider-body[data-provider-theme="nordic"] {
+  --theme-muted:#5c707c;
+  --atmosphere-background:radial-gradient(circle at 12% 5%,rgba(172,205,220,.16),transparent 42%),linear-gradient(145deg,#edf3f6,#f8fafb);
+}
+.provider-body[data-provider-theme="lavender"] {
+  --atmosphere-background:radial-gradient(circle at 82% 7%,rgba(183,160,216,.14),transparent 42%),linear-gradient(145deg,#f3f0f8,#fbfafc);
+}
+.provider-body[data-provider-theme="eco"] {
+  --atmosphere-background:radial-gradient(circle at 84% 8%,rgba(124,143,102,.1),transparent 42%),linear-gradient(145deg,#f2efe7,#faf8f3);
+}
+.provider-body[data-provider-theme="hitech"] {
+  --atmosphere-background:radial-gradient(circle at 84% 7%,rgba(91,173,214,.12),transparent 42%),linear-gradient(145deg,#edf4f7,#f8fbfc);
+}
+.provider-body[data-provider-theme="desert"] {
+  --atmosphere-background:radial-gradient(ellipse at 92% 2%,rgba(174,105,74,.07),transparent 42%),linear-gradient(145deg,#f4eade,#faf4ed);
+}
+.provider-body[data-provider-theme="rose"] {
+  --atmosphere-background:radial-gradient(circle at 88% 7%,rgba(133,82,103,.06),transparent 42%),linear-gradient(145deg,#f3ecef,#faf6f7);
+}
+
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .panel,.settings-card,.clients-directory,.client-profile,.notification-card,.waitlist-provider-card,
+  .report-summary article,.portfolio-card,.provider-review-card,.service-editor,
+  .provider-topbar,.provider-sidebar,.provider-section-nav,.provider-mobile-nav
+) {
+  border-color:var(--calm-line)!important;
+  box-shadow:var(--calm-panel-shadow)!important;
+  backdrop-filter:none!important;
+}
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .subscription-trial-note,.subscription-footnote,.subscription-includes,.subscription-plan-card,
+  .settings-note,.install-guide,.organization-row,.client-summary article,
+  .report-command-metrics article,.report-secondary,.report-business-card,.report-comparison
+) { border-color:var(--calm-line)!important; box-shadow:none!important; }
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .subscription-plan-featured,.subscription-plan-card:hover
+) { border-color:var(--theme-accent)!important; }
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .subscription-trial-note,.subscription-footnote,.subscription-cycle-switch,
+  .provider-display-hint,.settings-note
+) { background:var(--theme-surface-alt)!important; }
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .timeline-booking:not(.client-favorite,.client-vip,.client-attention,.is-dragging),
+  .provider-booking:not(.client-favorite,.client-vip,.client-attention),.date-strip button,.calendar-overview-booking
+) { box-shadow:none!important; }
+
+/* Filled selections must share the same foreground as the primary action. */
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .primary:not(.danger),.provider-section-nav button.active,.provider-theme-filter button[aria-pressed="true"],
+  .journal-mode-toggle button.active,.calendar-view-toggle button.active,
+  .booking-filters button.active,.notification-filters button.active,.report-periods button.active,
+  .report-data-source button.active,.report-view-tabs button.active,.report-mini-toggle button.active,
+  .team-calendar-mode button.active
+) {
+  background:var(--theme-accent)!important;
+  background-image:none!important;
+  border-color:var(--theme-accent)!important;
+  color:var(--theme-accent-contrast,#fff)!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .primary:not(.danger),.provider-section-nav button.active,.journal-mode-toggle button.active,
+  .report-data-source button.active,.report-view-tabs button.active
+) > span { color:inherit!important; }
+.provider-body[data-provider-theme][data-provider-layout] :is(button,a,input,select,textarea,summary):focus-visible {
+  outline:2px solid var(--theme-accent)!important;
+  outline-offset:3px;
+}
+/* Accent text on soft surfaces needs its own contrast, especially in Midnight. */
+.provider-body[data-provider-theme="midnight"] { --calm-accent-text:#9fc8e6; }
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .subscription-trial-badge,.subscription-start-bonus strong,
+  .subscription-cycle-switch label[for="subscriptionAnnual"] span,
+  .provider-mobile-nav button.active,.provider-nav button.active,.voice-assistant-open
+) { color:var(--calm-accent-text,var(--theme-accent))!important; }
+.provider-body[data-provider-theme="midnight"][data-provider-layout] :is(.settings-icon,.settings-heading>small) { color:var(--calm-accent-text)!important; }
+
+/* Readability without changing the timed calendar geometry. */
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .settings-heading p,.provider-display-hint,.provider-text-scale-help,
+  .provider-display-form .settings-check small,.provider-text-scale-option small,
+  .provider-layout-option small,.provider-theme-option small,.settings-help-link,
+  .provider-display-status,.subscription-plan-card small,.subscription-price span,
+  .subscription-launch-note,.subscription-cycle-switch label span,
+  .client-list-main small,.client-profile-head small,.client-summary small,
+  .waitlist-provider-client small,.report-summary small,.managed-service span,
+  .portfolio-card-body>small,.provider-review-head small,
+  .telegram-event-settings .settings-check small,.booking-policy-form .settings-check small,
+  .organization-policy-workspace>.settings-check small
+) { font-size:calc(12px + var(--provider-text-step,0px))!important; line-height:1.45!important; }
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .subscription-plan-card li,.subscription-footnote,.subscription-feature-grid span,
+  .subscription-start-bonus span,.subscription-start-bonus strong,
+  .provider-display-form .settings-check strong
+) { font-size:calc(13px + var(--provider-text-step,0px))!important; line-height:1.45!important; }
+.provider-body[data-provider-theme][data-provider-layout] :is(
+  .provider-section-nav button,.provider-theme-filter button,.subscription-cycle-switch label
+) { font-size:calc(13px + var(--provider-text-step,0px))!important; font-weight:650!important; line-height:1.3!important; min-height:44px!important; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-cycle-switch {
+  height:auto!important; min-height:64px!important; overflow:visible!important;
+}
+.provider-body[data-provider-theme][data-provider-layout] .subscription-cycle-switch label {
+  height:auto!important; min-height:54px!important; padding:8px!important; overflow:visible!important;
+}
+.provider-body[data-provider-theme][data-provider-layout] .subscription-cycle-switch label span { white-space:normal!important; text-align:center; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-pricing { padding:0!important; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-plan-card { display:flex; flex-direction:column; gap:18px!important; min-width:0; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-plan-top { min-height:0!important; padding:0!important; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-plan-card small { max-width:none; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-plan-label {
+  position:static!important; align-self:flex-start; order:-1;
+  max-width:100%; white-space:normal!important; overflow-wrap:anywhere;
+  font-size:calc(11px + var(--provider-text-step,0px))!important; letter-spacing:.025em;
+}
+.provider-body[data-provider-theme][data-provider-layout] .subscription-plan-card ul { margin-top:auto!important; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-trial-note .subscription-start-bonus { flex-wrap:wrap!important; }
+.provider-body[data-provider-theme][data-provider-layout] .subscription-start-bonus strong { white-space:normal!important; }
+
+/* Luxury keeps the marble backdrop and headline serif, with matte controls. */
+.provider-body[data-provider-theme="luxury"][data-provider-layout] { font-family:Inter,"Segoe UI",Arial,sans-serif; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] :is(button,input,select,textarea) { font-family:Inter,"Segoe UI",Arial,sans-serif!important; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] * { text-shadow:none!important; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] .provider-app {
+  background-image:linear-gradient(rgba(5,6,7,.96),rgba(5,6,7,.98)),url("provider-luxury-marble-v4.webp")!important;
+}
+.provider-body[data-provider-theme="luxury"][data-provider-layout] :is(
+  .panel,.settings-card,.provider-topbar,.provider-sidebar,.provider-empty,.empty-service,
+  .date-navigation,.date-strip,.schedule-toolbar,.timeline-view
+) { background:var(--theme-surface)!important; border-color:var(--calm-line)!important; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] :is(
+  .brand-mark,.user-avatar,.provider-user-avatar,.provider-nav b,.panel-count,
+  .notification-total,.provider-empty-icon,.empty-service-mark,.booking-outcome-summary,
+  .date-strip button.active
+) { background:var(--theme-accent)!important; border-color:var(--theme-accent)!important; color:var(--theme-accent-contrast)!important; box-shadow:none!important; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] :is(
+  .secondary-button,.date-nav-button,.date-today-button,.sync-tool-button,.topbar-client-link,
+  .notification-settings-button,.notification-card-actions button,.service-visibility-toggle,
+  .service-more>summary,.portfolio-card-actions button,.provider-review-card>button
+) { background:var(--theme-surface)!important; border-color:var(--theme-line)!important; color:var(--theme-ink)!important; box-shadow:none!important; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] .provider-nav button.active { background:var(--theme-accent-soft)!important; box-shadow:none!important; }
+.provider-body[data-provider-theme="luxury"][data-provider-layout] :is(.subscription-price strong,.subscription-plan-card h4) { font-family:Inter,"Segoe UI",Arial,sans-serif; }
+.provider-body[data-provider-theme]:is([data-provider-layout="linear"],[data-provider-layout="editorial"]) :is(
+  .panel,.settings-card,.clients-directory,.client-profile,.notification-card,.waitlist-provider-card,
+  .report-summary article,.portfolio-card,.provider-review-card,.service-editor,
+  .provider-topbar,.provider-sidebar,.provider-section-nav,.provider-mobile-nav
+) { box-shadow:none!important; }
+@media (min-width:761px) {
+  .provider-body[data-provider-theme][data-provider-layout] .subscription-plan-top { min-height:64px!important; }
+  .provider-body[data-provider-theme][data-provider-layout] .subscription-plan-card:not(.subscription-plan-featured)::after {
+    content:""; order:-1; height:calc(25px + var(--provider-text-step,0px));
+  }
+}
+@media (max-width:760px) {
+  .provider-body[data-provider-theme][data-provider-layout] :is(.provider-topbar,.provider-sidebar) { box-shadow:none!important; }
+  .provider-body[data-provider-theme="luxury"][data-provider-layout] .provider-app { background-image:none!important; }
+  .provider-body[data-provider-theme][data-provider-layout] .subscription-plan-card { padding:18px!important; }
+}
+
+/* The connection log is a top-level dialog, not a child of the themed panels.
+   Keep the entire component on the same palette in every theme. */
+.provider-body[data-provider-theme] .connection-log-dialog {
+  --connection-radius:var(--material-radius,22px);
+  --connection-entry-radius:var(--material-control-radius,12px);
+  box-sizing:border-box;
+  width:min(560px,calc(100vw - 24px));
+  max-height:calc(100dvh - 24px);
+  padding:24px;
+  overflow:auto;
+  border:1px solid var(--theme-line)!important;
+  border-radius:var(--connection-radius)!important;
+  background:var(--theme-surface)!important;
+  color:var(--theme-ink)!important;
+  color-scheme:inherit;
+  box-shadow:0 20px 60px var(--theme-shadow)!important;
+}
+.provider-body[data-provider-theme] .connection-log-dialog::backdrop {
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-head>div { min-width:0; }
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-head h2 {
+  color:var(--theme-ink)!important;
+  font-size:clamp(22px,5vw,28px);
+  line-height:1.2;
+  overflow-wrap:anywhere;
+}
+.provider-body[data-provider-theme] .connection-log-dialog :is(.connection-log-head small,.connection-log-lead,.connection-log-entry small) {
+  color:color-mix(in srgb,var(--theme-muted) 82%,var(--theme-ink))!important;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-head button {
+  flex:0 0 44px;
+  width:44px;
+  height:44px;
+  border:1px solid var(--theme-line)!important;
+  border-radius:var(--connection-entry-radius)!important;
+  background:var(--theme-surface-alt)!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-list {
+  max-height:min(390px,42dvh);
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:var(--theme-muted) var(--theme-surface-alt);
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-entry {
+  min-width:0;
+  border:1px solid var(--calm-line,var(--theme-line))!important;
+  border-radius:var(--connection-entry-radius)!important;
+  background:var(--theme-surface-alt)!important;
+  color:var(--theme-ink)!important;
+  box-shadow:none!important;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-entry strong {
+  color:var(--theme-ink)!important;
+  font-size:calc(13px + var(--provider-text-step,0px));
+  overflow-wrap:anywhere;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-entry small { font-size:calc(12px + var(--provider-text-step,0px)); }
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-entry>i { box-shadow:none!important; }
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-actions button {
+  min-width:0;
+  min-height:44px;
+  margin:0;
+  padding:12px 16px;
+  white-space:normal;
+  border-radius:var(--connection-entry-radius)!important;
+  box-shadow:none!important;
+  font-size:calc(13px + var(--provider-text-step,0px));
+  line-height:1.35;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-actions .secondary-button {
+  background:var(--theme-surface-alt)!important;
+  border:1px solid var(--theme-line)!important;
+  color:var(--theme-ink)!important;
+}
+.provider-body[data-provider-theme] .connection-log-dialog .connection-log-actions .primary {
+  background:var(--theme-accent)!important;
+  border:1px solid var(--theme-accent)!important;
+  color:var(--theme-accent-contrast)!important;
+}
+.provider-body[data-provider-theme]:is([data-provider-layout="linear"],[data-provider-layout="editorial"]) .connection-log-dialog {
+  --connection-radius:0px;
+  --connection-entry-radius:0px;
+}
+.provider-body[data-provider-theme] .connection-log-dialog :is(button,.connection-log-list):focus-visible {
+  outline:2px solid var(--theme-accent)!important;
+  outline-offset:2px;
+}
+@media (max-width:760px) {
+  .provider-body[data-provider-theme] .connection-log-dialog { padding:20px 16px; }
+  .provider-body[data-provider-theme] .connection-log-dialog .connection-log-actions { flex-direction:column-reverse; }
+}
