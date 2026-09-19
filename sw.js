@@ -28,13 +28,7 @@ const ASSETS = [
   './provider-header.css?v=811',
   './client-themes.css?v=811',
   './provider-themes-wildlife.css?v=811',
-  './settings-nav-scroll.css?v=811',
-  './settings-smart-search.css?v=811',
-  './provider-help-workspace.css?v=811',
-  './contextual-help.css?v=811',
-  './settings-mobile-minimalism.css?v=811',
   './client-records.css?v=811',
-  './provider-integrations.css?v=811',
   './client-results.css?v=811',
   './provider-theme-noir-safari.css?v=811',
   './client-directory.css?v=811',
@@ -79,6 +73,12 @@ const ASSETS = [
 // Warm after the first screen. A cold installation must not wait for tools
 // that are only used from a dialog; retain their offline use after warming.
 const OPTIONAL_ASSETS = [
+  './settings-nav-scroll.css?v=811',
+  './settings-smart-search.css?v=811',
+  './provider-help-workspace.css?v=811',
+  './contextual-help.css?v=811',
+  './settings-mobile-minimalism.css?v=811',
+  './provider-integrations.css?v=811',
   './finance-center.css?v=811',
   './finance-center.js?v=811',
   './finance-center-provider.js?v=811',
