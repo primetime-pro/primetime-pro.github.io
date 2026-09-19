@@ -103,15 +103,18 @@ try {
     const visibleAfter = Boolean(stage.querySelector('.timeline-create-hint'));
     const storedAfter = localStorage.getItem(scheduleCreateHintStorageKey('new-provider'));
     const returningMarkup = scheduleCreateHintMarkup({ userId:'new-provider', hasExistingBookings:false });
+    scheduleCreateHintMarkup({ userId:'existing-provider', hasExistingBookings:false });
     const existingMarkup = scheduleCreateHintMarkup({ userId:'existing-provider', hasExistingBookings:true });
+    const existingStored = localStorage.getItem(scheduleCreateHintStorageKey('existing-provider'));
     stage.remove();
-    return { visibleBefore, visibleAfter, storedAfter, returningMarkup, existingMarkup, opened:window.__openedTimelineSlot };
+    return { visibleBefore, visibleAfter, storedAfter, returningMarkup, existingMarkup, existingStored, opened:window.__openedTimelineSlot };
   });
   assert.equal(hintResult.visibleBefore, true, 'first-time provider must see the free-time hint');
   assert.equal(hintResult.visibleAfter, false, 'a real free-time click must remove the hint immediately');
   assert.equal(hintResult.storedAfter, 'dismissed', 'free-time hint dismissal must persist for the provider');
   assert.equal(hintResult.returningMarkup, '', 'dismissed hint returned for the same provider');
   assert.equal(hintResult.existingMarkup, '', 'existing provider with bookings received the onboarding hint');
+  assert.equal(hintResult.existingStored, 'dismissed', 'existing provider pending state was not migrated to dismissed');
   assert.deepEqual(hintResult.opened, { time:'10:30', date:'2026-09-15' }, 'hint dismissal changed the actual free-time action');
 
   const timelineGridTops = new Map();

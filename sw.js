@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'primetime-pro-';
-const CACHE = `${CACHE_PREFIX}v4`;
+const CACHE = `${CACHE_PREFIX}v5`;
 
 // Only the provider shell and its first-screen dependencies block installation.
 // Secondary sections, help media and decorative theme images are cached on use.
@@ -7,11 +7,11 @@ const ASSETS = [
   './index.html',
   './offline.html',
   './offline.js',
-  './manifest.webmanifest?v=4',
-  './provider-icon-192.png?v=4',
-  './provider-icon-512.png?v=4',
-  './provider-icon-maskable-512.png?v=4',
-  './provider-icon.svg?v=4',
+  './manifest.webmanifest?v=5',
+  './provider-icon-192.png?v=5',
+  './provider-icon-512.png?v=5',
+  './provider-icon-maskable-512.png?v=5',
+  './provider-icon.svg?v=5',
   './icon.svg',
   './ui-icons.svg',
   './styles.css?v=821',
@@ -23,7 +23,7 @@ const ASSETS = [
   './provider-themes-signature.css?v=811',
   './provider-themes-calm.css?v=811',
   './provider-layout-responsive.css?v=811',
-  './provider-ux.css?v=4',
+  './provider-ux.css?v=5',
   './provider-service-actions.css?v=811',
   './provider-header.css?v=811',
   './client-themes.css?v=811',
@@ -33,14 +33,14 @@ const ASSETS = [
   './provider-theme-noir-safari.css?v=811',
   './client-directory.css?v=811',
   './provider-ui-refinements.css?v=811',
-  './provider-schedule-minimal.css?v=4',
+  './provider-schedule-minimal.css?v=5',
   './provider-themes-distinct.css?v=821',
   './provider-theme-families.css?v=821',
   './provider-theme-backgrounds-tema1.css?v=811',
   './vendor/supabase-2.112.4.min.js',
   './config.js?v=811',
   './pwa-install.js?v=811',
-  './site-update.js?v=4',
+  './site-update.js?v=5',
   './reliability.js?v=811',
   './phone-auth.js?v=811',
   './social-auth.js?v=811',
@@ -65,9 +65,9 @@ const ASSETS = [
   './client-directory.js?v=811',
   './client-results.js?v=811',
   './provider-service-actions.js?v=811',
-  './provider.js?v=4',
+  './provider.js?v=5',
   './provider-help-workspace.js?v=811',
-  './provider-feature-assets.js?v=4',
+  './provider-feature-assets.js?v=5',
 ];
 
 // Warm after the first screen. A cold installation must not wait for tools

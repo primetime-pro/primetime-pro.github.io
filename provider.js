@@ -8247,12 +8247,12 @@ function scheduleCreateHintVisible({ userId = currentUser?.id, hasExistingBookin
   if (!userId) return false;
   try {
     const state = localStorage.getItem(scheduleCreateHintStorageKey(userId));
-    if (state === 'dismissed') return false;
-    if (state === 'pending') return true;
     if (hasExistingBookings) {
       localStorage.setItem(scheduleCreateHintStorageKey(userId), 'dismissed');
       return false;
     }
+    if (state === 'dismissed') return false;
+    if (state === 'pending') return true;
     localStorage.setItem(scheduleCreateHintStorageKey(userId), 'pending');
   } catch {
     return !hasExistingBookings;
