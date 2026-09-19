@@ -8004,6 +8004,7 @@ function openTimelineBooking(stage, event) {
   if (!requireBookingWrites()) return;
   const time = timelineTimeFromClick(stage, event);
   if (!time) return;
+  dismissScheduleCreateHint();
   openTimelineBookingAtTime(time, stage.dataset.timelineDate || selectedDate);
 }
 
@@ -8236,6 +8237,42 @@ async function loadAutomaticBookingBreaks(dateIso = selectedDate, userId = curre
   return { ok:true };
 }
 
+const SCHEDULE_CREATE_HINT_STORAGE_PREFIX = 'minuta-schedule-create-hint-v1';
+
+function scheduleCreateHintStorageKey(userId = currentUser?.id) {
+  return `${SCHEDULE_CREATE_HINT_STORAGE_PREFIX}:${userId || 'guest'}`;
+}
+
+function scheduleCreateHintVisible({ userId = currentUser?.id, hasExistingBookings = allBookings.length > 0 } = {}) {
+  if (!userId) return false;
+  try {
+    const state = localStorage.getItem(scheduleCreateHintStorageKey(userId));
+    if (state === 'dismissed') return false;
+    if (state === 'pending') return true;
+    if (hasExistingBookings) {
+      localStorage.setItem(scheduleCreateHintStorageKey(userId), 'dismissed');
+      return false;
+    }
+    localStorage.setItem(scheduleCreateHintStorageKey(userId), 'pending');
+  } catch {
+    return !hasExistingBookings;
+  }
+  return true;
+}
+
+function scheduleCreateHintMarkup(options) {
+  return scheduleCreateHintVisible(options)
+    ? `<span class="timeline-create-hint">${uiIcon('plus')} Нажмите на свободное время</span>`
+    : '';
+}
+
+function dismissScheduleCreateHint(userId = currentUser?.id, root = document) {
+  if (!userId) return false;
+  try { localStorage.setItem(scheduleCreateHintStorageKey(userId), 'dismissed'); } catch {}
+  root.querySelectorAll?.('.timeline-create-hint').forEach(hint => hint.remove());
+  return true;
+}
+
 function renderTimeline(sourceItems) {
   const operationalItems = sourceItems.filter(item => !item.is_imported_history);
   const items = [...sourceItems, ...automaticBookingBreaks(operationalItems)];
@@ -8349,7 +8386,7 @@ function renderTimeline(sourceItems) {
   }).join('');
   const nowMarker = scheduleNowMarkerMarkup(selectedDate, start, end, hourHeight, 'timeline-now-marker');
   holder.className = 'provider-bookings timeline-view';
-  holder.innerHTML = `<div class="day-timeline" style="--timeline-height:${totalHeight}px;--half-hour-offset:${hourHeight / 2}px"><div class="timeline-hours">${labels.join('')}</div><div class="timeline-stage" data-create-booking-at data-timeline-date="${selectedDate}" data-timeline-start="${start}" data-timeline-end="${end}" data-timeline-natural-height="${naturalTimelineHeight}" data-timeline-keyboard-minute="${start}" role="group" tabindex="0" aria-label="Выбор свободного времени. Выбрано ${timeFromMinutes(start)}. Стрелками измените время, Enter создаст запись">${lines.join('')}${nowMarker}<span class="timeline-create-hint">${uiIcon('plus')} Нажмите на свободное время</span>${cards || `<div class="timeline-empty-state"><span>${uiIcon('plus')}</span><strong>День свободен</strong><small>Нажмите на нужное время, чтобы записать клиента или поставить перерыв</small></div>`}</div></div>`;
+  holder.innerHTML = `<div class="day-timeline" style="--timeline-height:${totalHeight}px;--half-hour-offset:${hourHeight / 2}px"><div class="timeline-hours">${labels.join('')}</div><div class="timeline-stage" data-create-booking-at data-timeline-date="${selectedDate}" data-timeline-start="${start}" data-timeline-end="${end}" data-timeline-natural-height="${naturalTimelineHeight}" data-timeline-keyboard-minute="${start}" role="group" tabindex="0" aria-label="Выбор свободного времени. Выбрано ${timeFromMinutes(start)}. Стрелками измените время, Enter создаст запись">${lines.join('')}${nowMarker}${scheduleCreateHintMarkup()}${cards || `<div class="timeline-empty-state"><span>${uiIcon('plus')}</span><strong>День свободен</strong><small>Нажмите на нужное время, чтобы записать клиента или поставить перерыв</small></div>`}</div></div>`;
   if (typeof updateScheduleNowMarkers === 'function') updateScheduleNowMarkers();
 }
 

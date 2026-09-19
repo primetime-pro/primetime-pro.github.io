@@ -197,7 +197,7 @@ const server = http.createServer((request, response) => {
       assert.equal(transitions.swipeBack, -1, `${width}px: свайп вправо не выбирает предыдущий день`);
       assert.equal(transitions.verticalIgnored, 0, `${width}px: вертикальный жест ошибочно листает даты`);
       assert.ok(transitions.states.every(state => state.centerDelta <= 1.5), `${width}px: выбранная дата дёргается или не остаётся по центру (${JSON.stringify(transitions)})`);
-      assert.ok(transitions.states.every(state => state.width >= 46 && state.width <= 56 && state.height >= 57 && state.height <= 59), `${width}px: размер выбранной даты меняется при последовательных переходах (${JSON.stringify(transitions)})`);
+      assert.ok(transitions.states.every(state => state.width >= 46 && state.width <= 56 && state.height >= 53 && state.height <= 55), `${width}px: размер выбранной даты меняется при последовательных переходах (${JSON.stringify(transitions)})`);
     }
 
     const alternateView = await page.evaluate(() => {

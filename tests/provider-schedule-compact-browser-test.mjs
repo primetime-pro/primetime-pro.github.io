@@ -12,6 +12,14 @@ const shareHelperStart = providerSource.indexOf('async function shareProviderCli
 const shareHelperEnd = providerSource.indexOf('\nfunction clientAppearanceDraftFromForm', shareHelperStart);
 assert.ok(shareHelperStart >= 0 && shareHelperEnd > shareHelperStart, 'Client-page share helper is missing');
 const shareHelper = providerSource.slice(shareHelperStart, shareHelperEnd);
+const hintHelperStart = providerSource.indexOf("const SCHEDULE_CREATE_HINT_STORAGE_PREFIX");
+const hintHelperEnd = providerSource.indexOf('\nfunction renderTimeline(', hintHelperStart);
+assert.ok(hintHelperStart >= 0 && hintHelperEnd > hintHelperStart, 'Schedule create hint helper is missing');
+const hintHelper = providerSource.slice(hintHelperStart, hintHelperEnd);
+const openTimelineHelperStart = providerSource.indexOf('function openTimelineBooking(stage, event)');
+const openTimelineHelperEnd = providerSource.indexOf('\nfunction openTimelineBookingAtTime', openTimelineHelperStart);
+assert.ok(openTimelineHelperStart >= 0 && openTimelineHelperEnd > openTimelineHelperStart, 'Timeline click helper is missing');
+const openTimelineHelper = providerSource.slice(openTimelineHelperStart, openTimelineHelperEnd);
 const output = process.env.MINUTA_SCHEDULE_COMPACT_OUTPUT || '';
 if (output) fs.mkdirSync(output, { recursive:true });
 
@@ -80,6 +88,31 @@ try {
     const activeRect = activeDate.getBoundingClientRect();
     strip.scrollLeft = Math.max(0, activeRect.left - stripRect.left + strip.scrollLeft - (strip.clientWidth - activeRect.width) / 2);
   });
+
+  await page.addScriptTag({ content:`window.uiIcon=()=>'<svg></svg>';window.currentUser={id:'new-provider'};window.allBookings=[];window.requireBookingWrites=()=>true;window.timelineTimeFromClick=()=> '10:30';window.openTimelineBookingAtTime=(time,date)=>{window.__openedTimelineSlot={time,date};};${hintHelper}\n${openTimelineHelper}` });
+  const hintResult = await page.evaluate(() => {
+    localStorage.clear();
+    const stage = document.createElement('div');
+    stage.className = 'timeline-stage schedule-hint-test-stage';
+    stage.dataset.timelineDate = '2026-09-15';
+    document.body.append(stage);
+    stage.innerHTML = scheduleCreateHintMarkup({ userId:'new-provider', hasExistingBookings:false });
+    const visibleBefore = Boolean(stage.querySelector('.timeline-create-hint'));
+    stage.addEventListener('click', event => openTimelineBooking(stage, event), { once:true });
+    stage.dispatchEvent(new MouseEvent('click', { bubbles:true, clientY:20 }));
+    const visibleAfter = Boolean(stage.querySelector('.timeline-create-hint'));
+    const storedAfter = localStorage.getItem(scheduleCreateHintStorageKey('new-provider'));
+    const returningMarkup = scheduleCreateHintMarkup({ userId:'new-provider', hasExistingBookings:false });
+    const existingMarkup = scheduleCreateHintMarkup({ userId:'existing-provider', hasExistingBookings:true });
+    stage.remove();
+    return { visibleBefore, visibleAfter, storedAfter, returningMarkup, existingMarkup, opened:window.__openedTimelineSlot };
+  });
+  assert.equal(hintResult.visibleBefore, true, 'first-time provider must see the free-time hint');
+  assert.equal(hintResult.visibleAfter, false, 'a real free-time click must remove the hint immediately');
+  assert.equal(hintResult.storedAfter, 'dismissed', 'free-time hint dismissal must persist for the provider');
+  assert.equal(hintResult.returningMarkup, '', 'dismissed hint returned for the same provider');
+  assert.equal(hintResult.existingMarkup, '', 'existing provider with bookings received the onboarding hint');
+  assert.deepEqual(hintResult.opened, { time:'10:30', date:'2026-09-15' }, 'hint dismissal changed the actual free-time action');
 
   const timelineGridTops = new Map();
   const timelineToolbarTops = new Map();
@@ -330,7 +363,7 @@ try {
       assert.equal(result.newBookingBackground, 'rgb(13, 128, 92)', `${width}px New booking does not use the schedule accent token`);
       assert.equal(result.journalActiveBackground, 'rgb(13, 128, 92)', `${width}px active journal mode does not use the schedule accent token`);
       assert.ok(result.activeDate.width >= 46 && result.activeDate.width <= 56, `${width}px selected date is still oversized: ${JSON.stringify(result)}`);
-      assert.ok(result.activeDate.height >= 57 && result.activeDate.height <= 59, `${width}px selected date height is still oversized: ${JSON.stringify(result)}`);
+      assert.ok(result.activeDate.height >= 53 && result.activeDate.height <= 55, `${width}px selected date height is still oversized: ${JSON.stringify(result)}`);
       assert.ok(result.twoDigitRhythm.numberCenterDelta <= 1 && result.twoDigitRhythm.gapDelta <= 2, `${width}px two-digit selected date lost its vertical rhythm: ${JSON.stringify(result)}`);
       assert.ok(result.singleDigitRhythm.numberCenterDelta <= 1 && result.singleDigitRhythm.gapDelta <= 2, `${width}px single-digit selected date lost its vertical rhythm: ${JSON.stringify(result)}`);
       assert.ok(result.activeDateMarkerContent === 'none' || result.activeDateMarkerDisplay === 'none', `${width}px selected date regained a second lower marker: ${JSON.stringify(result)}`);
@@ -338,7 +371,7 @@ try {
       assert.ok(result.toolbarContentCenterDelta <= 2, `${width}px day heading and journal toggle are not aligned: ${JSON.stringify(result)}`);
       assert.ok(result.journalGridGap >= 8, `${width}px timeline grid touches the journal toggle: ${JSON.stringify(result)}`);
       assert.ok(result.strip.top - result.navigation.bottom >= -1 && result.strip.top - result.navigation.bottom <= 1, `${width}px date controls and strip no longer form one card: ${JSON.stringify(result)}`);
-      assert.ok(result.toolbar.top - result.strip.bottom >= 12 && result.toolbar.top - result.strip.bottom <= 18, `${width}px date card and journal card lost their separation: ${JSON.stringify(result)}`);
+      assert.ok(result.toolbar.top - result.strip.bottom >= 5 && result.toolbar.top - result.strip.bottom <= 8, `${width}px date card and journal card lost their compact separation: ${JSON.stringify(result)}`);
       assert.ok(Math.abs(result.viewportHeight - result.nav.bottom) <= 1, `${width}px compact navigation must use the viewport edge while preserving safe-area`);
       assert.equal(result.tabBackground, 'rgba(0, 0, 0, 0)', `${width}px period tabs are not flat`);
       assert.equal(result.tabAccentHeight, '3px', `${width}px selected period needs a clear thin accent`);
@@ -364,7 +397,7 @@ try {
         assert.ok(result.dateNumberSize <= 26 && result.dateNumberSize >= 22, `${width}px selected date is not a compact readable accent: ${JSON.stringify(result)}`);
         assert.ok(result.summaryScrollWidth <= result.summaryClientWidth + 1, `${width}px title summary is clipped: ${JSON.stringify(result)}`);
         assert.equal(result.summaryChildrenInside, true, `${width}px title summary children escape their row: ${JSON.stringify(result)}`);
-        assert.deepEqual(result.summaryText, ['0', 'записей сегодня', '2', 'записей завтра', '5', 'записей впереди'], `${width}px title summary fixture changed`);
+        assert.deepEqual(result.summaryText, ['0', 'сегодня', '2', 'завтра', '5', 'впереди'], `${width}px title summary fixture changed`);
       }
       timelineGridTops.set(width, result.timelineTop);
       timelineToolbarTops.set(width, result.toolbar.top);
@@ -379,6 +412,42 @@ try {
     }
     if (output) await page.screenshot({ path:path.join(output, `schedule-compact-${width}.png`), fullPage:false });
   }
+
+  await page.setViewportSize({ width:390, height:844 });
+  await page.evaluate(() => {
+    const strip = document.querySelector('#dateStrip');
+    [...strip.children].forEach(button => {
+      const day = Number(button.querySelector('strong')?.textContent || 0);
+      button.classList.toggle('active', day === 19);
+      button.dataset.dateDistance = String(Math.min(3, Math.abs(day - 19)));
+    });
+    const selected = strip.querySelector('[data-booking-date="2026-09-19"]');
+    const stripRect = strip.getBoundingClientRect();
+    const selectedRect = selected.getBoundingClientRect();
+    strip.scrollLeft = Math.max(0, selectedRect.left - stripRect.left + strip.scrollLeft - (strip.clientWidth - selectedRect.width) / 2);
+  });
+  await page.waitForTimeout(220);
+  const rightEdgeDate = await page.evaluate(() => {
+    const strip = document.querySelector('#dateStrip');
+    const selected = strip.querySelector('[data-booking-date="2026-09-19"]');
+    const button = strip.querySelector('[data-booking-date="2026-09-22"]');
+    const label = button.querySelector('small');
+    const buttonRect = button.getBoundingClientRect();
+    const labelRect = label.getBoundingClientRect();
+    const viewport = strip.getBoundingClientRect();
+    return {
+      fullyVisible:buttonRect.left >= viewport.left - 1 && buttonRect.right <= viewport.right + 1,
+      labelInside:labelRect.left >= buttonRect.left - 1 && labelRect.right <= buttonRect.right + 1 && labelRect.bottom <= buttonRect.bottom + 1,
+      label:label.textContent.trim(),
+      selectedBackground:getComputedStyle(selected).backgroundColor,
+      selectedBackgroundImage:getComputedStyle(selected).backgroundImage
+    };
+  });
+  assert.equal(rightEdgeDate.fullyVisible, true, `390px date 22 is cropped: ${JSON.stringify(rightEdgeDate)}`);
+  assert.equal(rightEdgeDate.labelInside, true, `390px date 22 month label is clipped: ${JSON.stringify(rightEdgeDate)}`);
+  assert.equal(rightEdgeDate.label, 'сент', 'date 22 month label changed');
+  assert.equal(rightEdgeDate.selectedBackground, 'rgb(13, 128, 92)', `390px selected date 19 lost the solid brand green: ${JSON.stringify(rightEdgeDate)}`);
+  assert.equal(rightEdgeDate.selectedBackgroundImage, 'none', `390px selected date 19 gained a gradient: ${JSON.stringify(rightEdgeDate)}`);
 
   await page.setViewportSize({ width:360, height:720 });
   await page.evaluate(() => window.scrollTo(0, 0));
