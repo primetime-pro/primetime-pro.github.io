@@ -7,11 +7,11 @@ const ASSETS = [
   './index.html',
   './offline.html',
   './offline.js',
-  './manifest.webmanifest?v=1',
-  './provider-icon-192.png?v=811',
-  './provider-icon-512.png?v=811',
-  './provider-icon-maskable-512.png?v=811',
-  './provider-icon.svg?v=811',
+  './manifest.webmanifest?v=2',
+  './provider-icon-192.png?v=2',
+  './provider-icon-512.png?v=2',
+  './provider-icon-maskable-512.png?v=2',
+  './provider-icon.svg?v=2',
   './icon.svg',
   './ui-icons.svg',
   './styles.css?v=821',
@@ -67,7 +67,7 @@ const ASSETS = [
   './provider-service-actions.js?v=811',
   './provider.js?v=2',
   './provider-help-workspace.js?v=811',
-  './provider-feature-assets.js?v=811',
+  './provider-feature-assets.js?v=2',
 ];
 
 // Warm after the first screen. A cold installation must not wait for tools

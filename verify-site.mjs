@@ -13,7 +13,7 @@ const config = read('config.js');
 
 assert.match(index, /<title>PrimeTime Pro — кабинет исполнителя<\/title>/);
 assert.match(index, /apple-mobile-web-app-title" content="PrimeTime Pro"/);
-assert.match(index, /manifest\.webmanifest\?v=1/);
+assert.match(index, /manifest\.webmanifest\?v=2/);
 assert.doesNotMatch(index, /href="index\.html"/);
 assert.equal(manifest.id, './');
 assert.equal(manifest.start_url, './');
@@ -28,6 +28,8 @@ assert.match(index, /class="provider-view mobile-more-overlay" data-provider-pan
 assert.match(worker, /provider-ux\.css\?v=2/);
 assert.match(worker, /site-update\.js\?v=2/);
 assert.match(worker, /provider\.js\?v=2/);
+assert.match(worker, /manifest\.webmanifest\?v=2/);
+assert.match(worker, /provider-feature-assets\.js\?v=2/);
 assert.match(provider, /function openProviderMobileMore\(/);
 assert.match(provider, /function dismissProviderMobileMore\(/);
 assert.match(provider, /providerMobileMoreHistoryDismissed/);
