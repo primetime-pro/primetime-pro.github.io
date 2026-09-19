@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="provider-themes-signature.css?v=811">
   <link rel="stylesheet" href="provider-themes-calm.css?v=811">
   <link rel="stylesheet" href="provider-layout-responsive.css?v=811">
-  <link rel="stylesheet" href="provider-ux.css?v=821">
+  <link rel="stylesheet" href="provider-ux.css?v=2">
   <link rel="stylesheet" href="provider-service-actions.css?v=811">
   <link rel="stylesheet" href="provider-header.css?v=811">
   <link rel="stylesheet" href="client-themes.css?v=811">
@@ -1771,8 +1771,10 @@
           </div>
         </section>
 
-        <section class="provider-view" data-provider-panel="more" hidden>
-          <div class="view-title"><div><span>Управление</span><h2>Разделы</h2></div></div>
+        <section class="provider-view mobile-more-overlay" data-provider-panel="more" aria-hidden="true" hidden>
+          <button class="mobile-more-backdrop" type="button" data-close-mobile-more aria-label="Закрыть разделы"></button>
+          <div class="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobileMoreTitle">
+          <div class="view-title"><div><span>Управление</span><h2 id="mobileMoreTitle">Разделы</h2></div><button class="mobile-more-close" type="button" data-close-mobile-more aria-label="Закрыть разделы"><svg class="ui-icon" aria-hidden="true"><use href="ui-icons.svg#icon-close"></use></svg></button></div>
           <p class="mobile-more-intro">Расписание, услуги и настройки бизнеса.</p>
           <div class="mobile-more-grid">
             <button type="button" data-provider-view="feedback-inbox"><span><svg class="ui-icon" aria-hidden="true"><use href="ui-icons.svg#icon-info"></use></svg></span><strong>Обращения</strong><small>Сообщения об ошибках и предложения команды</small></button>
@@ -1789,6 +1791,7 @@
             <button type="button" data-provider-view="portfolio"><span><svg class="ui-icon" aria-hidden="true"><use href="ui-icons.svg#icon-image"></use></svg></span><strong>Портфолио</strong><small>Фото работ и количество сеансов</small></button>
             <button type="button" data-provider-view="analytics"><span><svg class="ui-icon" aria-hidden="true"><use href="ui-icons.svg#icon-chart"></use></svg></span><strong>Статистика</strong><small>Доход, визиты и выгрузка записей</small></button>
             <button type="button" data-provider-view="waitlist"><span><svg class="ui-icon" aria-hidden="true"><use href="ui-icons.svg#icon-clock"></use></svg></span><strong>Лист ожидания</strong><small>Заявки клиентов на занятые даты</small></button>
+          </div>
           </div>
         </section>
       </div>
@@ -2119,7 +2122,7 @@
   </div>
   <script src="vendor/supabase-2.112.4.min.js" integrity="sha384-yiVMs0R/Jyz7OhoXa/DsEMUSBLjEhr/QJta2ONO+zB6I8/GmNg/7AUFrZmAJV7KV"></script>
   <script src="config.js?v=811"></script>
-  <script src="site-update.js?v=1" defer></script>
+  <script src="site-update.js?v=2" defer></script>
   <script src="reliability.js?v=811"></script>
   <script src="phone-auth.js?v=811"></script>
   <script src="social-auth.js?v=811"></script>
@@ -2168,7 +2171,7 @@
   <script src="finance-center.js?v=811" defer></script>
   <script src="finance-center-provider.js?v=811" defer></script>
   <script src="provider-service-actions.js?v=811" defer></script>
-  <script src="provider.js?v=1" defer></script>
+  <script src="provider.js?v=2" defer></script>
   <script src="provider-help-workspace.js?v=811" defer></script>
   <script src="service-presets.js?v=811" defer></script>
   <script src="primetime-handoff.js?v=811" defer></script>

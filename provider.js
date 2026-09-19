@@ -2127,7 +2127,8 @@ function renderMobileNavigation() {
     badge.hidden = pendingBadge?.hidden !== false;
   });
   nav.querySelectorAll('[data-provider-view]').forEach(button => {
-    const active = button.dataset.providerView === activeView || (button.dataset.providerView === 'more' && !selected.includes(activeView));
+    const active = button.dataset.providerView === activeView
+      || (button.dataset.providerView === 'more' && (providerMobileMoreIsOpen() || !selected.includes(activeView)));
     button.classList.toggle('active', active);
     if (active) button.setAttribute('aria-current', 'page');
     else button.removeAttribute('aria-current');
@@ -5760,10 +5761,110 @@ async function testVisitorSystemNotification() {
 }
 
 const PROVIDER_VIEW_ORDER = ['bookings', 'clients', 'messages', 'notifications', 'waitlist', 'analytics', 'schedule', 'services', 'organization', 'portfolio', 'feedback-inbox', 'settings', 'more'];
+let providerMobileMoreReturnView = 'bookings';
+let providerMobileMoreScrollTop = 0;
+let providerMobileMoreBodyStyle = null;
+let providerMobileMoreHistoryDismissed = false;
+
+function providerMobileMoreIsOpen() {
+  const panel = $('[data-provider-panel="more"]');
+  return Boolean(panel && !panel.hidden && panel.classList.contains('is-open'));
+}
+
+function providerMobileMoreUrl(view = 'more') {
+  const url = new URL(window.location.href);
+  url.searchParams.delete('view');
+  if (view === 'bookings') url.searchParams.delete('section');
+  else url.searchParams.set('section', view);
+  if (view !== 'settings') {
+    url.searchParams.delete('settings-section');
+    url.searchParams.delete('settings-target');
+  }
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
+function openProviderMobileMore({ historyMode = 'push', returnView = '' } = {}) {
+  if (!providerSectionMobileQuery.matches) return false;
+  const panel = $('[data-provider-panel="more"]');
+  const dashboard = $('#dashboard');
+  if (!panel || !dashboard) return false;
+  const activeView = returnView || dashboard.dataset.activeView || providerViewFromLocation();
+  providerMobileMoreReturnView = PROVIDER_VIEW_ORDER.includes(activeView) && activeView !== 'more' ? activeView : 'bookings';
+  providerMobileMoreHistoryDismissed = false;
+  if (!providerMobileMoreIsOpen()) {
+    providerMobileMoreScrollTop = window.scrollY || document.scrollingElement?.scrollTop || 0;
+    providerMobileMoreBodyStyle = {
+      position:document.body.style.position,
+      top:document.body.style.top,
+      right:document.body.style.right,
+      left:document.body.style.left,
+      width:document.body.style.width
+    };
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${providerMobileMoreScrollTop}px`;
+    document.body.style.right = '0';
+    document.body.style.left = '0';
+    document.body.style.width = '100%';
+  }
+  document.body.classList.add('provider-mobile-more-open');
+  panel.hidden = false;
+  panel.classList.add('is-open');
+  panel.setAttribute('aria-hidden', 'false');
+  renderMobileNavigation();
+  if (historyMode !== 'none') {
+    window.history[historyMode === 'replace' ? 'replaceState' : 'pushState']({
+      ...(window.history.state || {}),
+      providerMobileMore:true,
+      providerMobileMoreReturnView
+    }, '', providerMobileMoreUrl());
+  }
+  requestAnimationFrame(() => panel.querySelector('.mobile-more-close')?.focus({ preventScroll:true }));
+  return true;
+}
+
+function closeProviderMobileMore({ restoreFocus = false, historyMode = 'none' } = {}) {
+  const panel = $('[data-provider-panel="more"]');
+  if (!panel || !providerMobileMoreIsOpen()) return false;
+  panel.hidden = true;
+  panel.classList.remove('is-open');
+  panel.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('provider-mobile-more-open');
+  if (providerMobileMoreBodyStyle) {
+    Object.assign(document.body.style, providerMobileMoreBodyStyle);
+    providerMobileMoreBodyStyle = null;
+  }
+  window.scrollTo({ top:providerMobileMoreScrollTop, left:0, behavior:'auto' });
+  if (historyMode === 'replace') {
+    const state = { ...(window.history.state || {}), providerView:providerMobileMoreReturnView };
+    delete state.providerMobileMore;
+    delete state.providerMobileMoreReturnView;
+    window.history.replaceState(state, '', providerMobileMoreUrl(providerMobileMoreReturnView));
+  }
+  renderMobileNavigation();
+  if (restoreFocus) requestAnimationFrame(() => $('.provider-mobile-nav [data-provider-view="more"]')?.focus({ preventScroll:true }));
+  return true;
+}
+
+function dismissProviderMobileMore({ restoreFocus = true } = {}) {
+  const returnView = providerMobileMoreReturnView;
+  const ownsHistoryEntry = window.history.state?.providerMobileMore === true;
+  if (!closeProviderMobileMore({ restoreFocus })) return false;
+  if (ownsHistoryEntry) {
+    providerMobileMoreHistoryDismissed = true;
+    window.history.back();
+  } else {
+    syncProviderViewHistory(returnView, 'replace');
+  }
+  return true;
+}
 
 function providerViewFromLocation() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('section') || params.get('view');
+  if (requested === 'more') {
+    const returnView = window.history.state?.providerMobileMoreReturnView;
+    return PROVIDER_VIEW_ORDER.includes(returnView) && returnView !== 'more' ? returnView : 'bookings';
+  }
   return PROVIDER_VIEW_ORDER.includes(requested) ? requested : 'bookings';
 }
 
@@ -6473,11 +6574,18 @@ function setProviderViewImmediate(view, focusHeading = false) {
 }
 function setProviderView(view, { historyMode = 'push', focusHeading = true } = {}) {
   const nextView = PROVIDER_VIEW_ORDER.includes(view) ? view : 'bookings';
+  if (nextView === 'more' && providerSectionMobileQuery.matches) {
+    openProviderMobileMore({ historyMode });
+    return null;
+  }
+  const replacedMobileMore = providerMobileMoreIsOpen();
+  if (replacedMobileMore) closeProviderMobileMore({ restoreFocus:false });
+  const effectiveHistoryMode = replacedMobileMore && historyMode === 'push' ? 'replace' : historyMode;
   const currentPanel = $$('[data-provider-panel]').find(panel => !panel.hidden);
   const previousView = currentPanel?.dataset.providerPanel;
   const changed = previousView !== nextView;
   const update = () => setProviderViewImmediate(nextView, focusHeading && changed);
-  if (changed || historyMode === 'replace' || providerViewFromLocation() !== nextView) syncProviderViewHistory(nextView, historyMode);
+  if (changed || effectiveHistoryMode === 'replace' || providerViewFromLocation() !== nextView) syncProviderViewHistory(nextView, effectiveHistoryMode);
   if (previousView && changed && !$('#dashboard').hidden) {
     const previousIndex = PROVIDER_VIEW_ORDER.indexOf(previousView);
     const nextIndex = PROVIDER_VIEW_ORDER.indexOf(nextView);
@@ -15634,6 +15742,7 @@ document.addEventListener('click', async event => {
   }
   const authTab = event.target.closest('[data-auth-tab]');
   const view = event.target.closest('[data-provider-view]');
+  const closeMobileMoreButton = event.target.closest('[data-close-mobile-more]');
   const sectionTarget = event.target.closest('[data-section-target]');
   const notificationFilterButton = event.target.closest('[data-notification-filter]');
   const markAllNotificationsButton = event.target.closest('#markAllNotificationsSent');
@@ -15732,8 +15841,18 @@ document.addEventListener('click', async event => {
   const clientBlockConfirm = event.target.closest('#clientBlockConfirm');
   const closeClientDialog = event.target.closest('[data-close-client-dialog]');
   const slotIntervalButton = event.target.closest('[data-slot-interval]');
+  if (closeMobileMoreButton) {
+    event.preventDefault();
+    dismissProviderMobileMore();
+    return;
+  }
   if (authTab) setAuthTab(authTab.dataset.authTab);
   if (view) {
+    if (view.dataset.providerView === 'more' && providerSectionMobileQuery.matches && providerMobileMoreIsOpen()) {
+      event.preventDefault();
+      dismissProviderMobileMore();
+      return;
+    }
     const transition = setProviderView(view.dataset.providerView);
     if (view.matches('[data-edit-provider-business]')) {
       Promise.resolve(transition).then(() => requestAnimationFrame(() => {
@@ -16236,6 +16355,7 @@ document.addEventListener('keydown', event => {
   else if ($('#portfolioPhotoSourceDialog')?.open) { event.preventDefault(); closePortfolioPhotoSource(); }
   else if ($('#portfolioEditorDialog').open) closePortfolioEditor();
   else if (!$('#bookingSheet').hidden) closeBookingSheet();
+  else if (providerMobileMoreIsOpen()) { event.preventDefault(); dismissProviderMobileMore(); }
 });
 function resumeProviderConnection(force = false) {
   if (document.hidden) return;
@@ -17758,9 +17878,21 @@ window.addEventListener('scroll', scheduleSectionNavigationUpdate, { passive:tru
 window.addEventListener('resize', scheduleSectionNavigationUpdate);
 if (typeof providerSectionMobileQuery.addEventListener === 'function') providerSectionMobileQuery.addEventListener('change', refreshSectionNavigation);
 else providerSectionMobileQuery.addListener?.(refreshSectionNavigation);
-window.addEventListener('popstate', () => {
+const handleProviderMobileMoreBreakpoint = () => {
+  if (!providerSectionMobileQuery.matches && providerMobileMoreIsOpen()) closeProviderMobileMore({ historyMode:'replace' });
+};
+if (typeof providerSectionMobileQuery.addEventListener === 'function') providerSectionMobileQuery.addEventListener('change', handleProviderMobileMoreBreakpoint);
+else providerSectionMobileQuery.addListener?.(handleProviderMobileMoreBreakpoint);
+window.addEventListener('popstate', event => {
   if (!currentUser || $('#dashboard').hidden) return;
   if (window.MinutaProviderHelpWorkspace?.handlesCurrentHistory?.()) return;
+  if (event.state?.providerMobileMore === true && providerSectionMobileQuery.matches) {
+    openProviderMobileMore({ historyMode:'none', returnView:event.state.providerMobileMoreReturnView });
+    return;
+  }
+  const closedMobileMore = closeProviderMobileMore({ restoreFocus:false });
+  const preserveMobileMoreScroll = closedMobileMore || providerMobileMoreHistoryDismissed;
+  providerMobileMoreHistoryDismissed = false;
   const nextFilter = restoreScheduleFilter();
   currentFilter = nextFilter;
   calendarView = nextFilter === 'day' ? restoreCalendarView() : 'day';
@@ -17771,10 +17903,14 @@ window.addEventListener('popstate', () => {
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
   });
-  setProviderView(providerViewFromLocation(), { historyMode:'none', focusHeading:true });
+  const historyView = providerViewFromLocation();
+  if (!(preserveMobileMoreScroll && $('#dashboard').dataset.activeView === historyView)) {
+    setProviderView(historyView, { historyMode:'none', focusHeading:true });
+  }
   updateCalendarViewControls();
   renderDateStrip();
   renderBookings();
+  if (preserveMobileMoreScroll) requestAnimationFrame(() => window.scrollTo({ top:providerMobileMoreScrollTop, left:0, behavior:'auto' }));
 });
 if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', event => {
   if (event.data?.type === 'open-provider-view' && PROVIDER_VIEW_ORDER.includes(event.data.view) && currentUser) setProviderView(event.data.view);
